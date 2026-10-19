@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f4f0">
+    <title>Anonymous Complaints - Student Wish</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+            color: #28251f;
+            background: #f7f4f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 84px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            border-bottom: 1px solid #050300;
+        }
+
+        .brand {
+            color: #28251f;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .department-menu {
+            position: relative;
+        }
+
+        .department-menu summary {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border: 1px solid #070502;
+            border-radius: 50%;
+            color: #655c53;
+            font: bold 24px/1 Arial, sans-serif;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .department-menu summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .department-menu summary:hover,
+        .department-menu summary:focus-visible {
+            background: #070707;
+        }
+
+        .department-menu-panel {
+            position: absolute;
+            z-index: 11;
+            top: calc(100% + 8px);
+            right: 0;
+            display: grid;
+            width: min(320px, calc(100vw - 32px));
+            max-height: min(70vh, 480px);
+            gap: 10px;
+            padding: 14px;
+            overflow-y: auto;
+            border: 1px solid #060400;
+            border-radius: 10px;
+            background: #fffdfa;
+            box-shadow: 0 8px 24px #422a2720;
+        }
+
+        .department-menu-panel label {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .department-menu-panel select {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+        }
+
+        .department-admin-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .department-admin-list:empty {
+            display: none;
+        }
+
+        .department-admin-card {
+            display: grid;
+            gap: 3px;
+            padding: 10px;
+            border: 1px solid #eee9e2;
+            border-radius: 8px;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .department-admin-card:hover,
+        .department-admin-card:focus-visible {
+            border-color: #754b66;
+            background: #faf6f8;
+        }
+
+        .department-admin-card strong {
+            color: #754b66;
+        }
+
+        .department-admin-card span,
+        .department-admin-empty {
+            margin: 0;
+            color: #655c53;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        main {
+            display: flex;
+            width: min(100% - 32px, 760px);
+            height: min(720px, calc(100vh - 150px));
+            min-height: 400px;
+            flex-direction: column;
+            margin: 24px auto;
+            overflow: hidden;
+            border: 1px solid #e4ded6;
+            border-radius: 12px;
+            background: #fffdfa;
+            box-shadow: 0 8px 28px #422a2710;
+        }
+
+        .complaint-header {
+            padding: 20px 22px 14px;
+            border-bottom: 1px solid #eee9e2;
+        }
+
+        .complaint-header h1 {
+            margin: 0 0 6px;
+            font-family: Georgia, serif;
+            font-size: 25px;
+        }
+
+        .privacy-note {
+            margin: 0;
+            color: #655c53;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message-list {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 12px;
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto;
+            list-style: none;
+        }
+
+        .complaint-message {
+            position: relative;
+            max-width: min(88%, 520px);
+            align-self: flex-start;
+            padding: 12px 14px;
+            border-radius: 16px 16px 16px 4px;
+            background: #a5650c;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .complaint-menu-toggle {
+            position: absolute;
+            top: 5px;
+            right: 6px;
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: #655c53;
+            font: bold 21px/1 Arial, sans-serif;
+            cursor: pointer;
+        }
+
+        .complaint-menu-toggle:hover,
+        .complaint-menu-toggle:focus-visible {
+            background: #e3dcd4;
+        }
+
+        .complaint-content {
+            padding-right: 20px;
+        }
+
+        .complaint-text {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .complaint-department {
+            margin: 0 0 6px;
+            color: #655c53;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .complaint-options,
+        .complaint-edit-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 9px;
+        }
+
+        .complaint-options[hidden] {
+            display: none;
+        }
+
+        .complaint-options button,
+        .complaint-edit-actions button {
+            padding: 6px 10px;
+            border: 0;
+            border-radius: 6px;
+            background: #fffdfa;
+            color: #28251f;
+            font: inherit;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .complaint-options button[data-action="delete"] {
+            color: #a52b3c;
+        }
+
+        .complaint-editor {
+            display: grid;
+            gap: 8px;
+            min-width: min(65vw, 280px);
+        }
+
+        .complaint-editor textarea {
+            width: 100%;
+            min-height: 76px;
+            padding: 8px;
+            border: 1px solid #ca7d25;
+            border-radius: 7px;
+            font: inherit;
+            resize: vertical;
+        }
+
+        .complaint-editor label {
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .complaint-editor input[type="file"] {
+            max-width: 100%;
+            font: inherit;
+            font-size: 12px;
+        }
+
+        .complaint-edit-actions button[type="submit"] {
+            background: #5a1192;
+        }
+
+        .complaint-media {
+            display: block;
+            width: 100%;
+            max-height: 420px;
+            margin-top: 8px;
+            border-radius: 9px;
+            background: #211d20;
+            object-fit: contain;
+        }
+
+        .empty-state {
+            margin: auto;
+            padding: 24px;
+            color: #81776d;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .complaint-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 9px;
+            align-items: center;
+            padding: 14px;
+            border-top: 1px solid #cb8523;
+        }
+
+        .department-select {
+            width: 100%;
+            grid-column: 1 / -1;
+            padding: 10px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 8px;
+            background: #7b551b;
+            color: inherit;
+            font: inherit;
+        }
+
+        .message-input {
+            min-width: 0;
+            min-height: 44px;
+            padding: 10px 13px;
+            border: 1px solid #d8d0c7;
+            border-radius: 22px;
+            font: inherit;
+        }
+
+        .file-label,
+        .send-button {
+            display: grid;
+            min-height: 42px;
+            place-items: center;
+            padding: 0 14px;
+            border: 0;
+            border-radius: 21px;
+            background: #754b66;
+            color: rgb(194, 18, 18);
+            font: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .file-label {
+            background: #f0ebe4;
+            color: #e39e16;
+        }
+
+        .file-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+
+        .file-input:focus-visible + .file-label,
+        .send-button:focus-visible,
+        .file-label:focus-within {
+            outline: 3px solid #bd8ca9;
+            outline-offset: 2px;
+        }
+
+        .attachment-name {
+            grid-column: 1 / -1;
+            margin: -3px 4px 0;
+            color: #655c53;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            min-height: 1.4em;
+            margin: 0;
+            padding: 0 16px 10px;
+            color: #655c53;
+            font-size: 13px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            z-index: 10;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+            border-top: 1px solid #070401;
+            background: #fffdfa;
+        }
+
+        .bottom-nav-inner {
+            display: grid;
+            width: min(100%, 560px);
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            min-height: 48px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 8px;
+            color: #655c53;
+            font-size: 10px;
+            text-decoration: none;
+        }
+
+        .bottom-nav a[aria-current="page"] {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bottom-nav svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        @media (max-width: 560px) {
+            .topbar {
+                padding: 16px;
+            }
+
+            main {
+                width: 100%;
+                height: calc(100vh - 144px);
+                min-height: 360px;
+                margin: 0;
+                border-right: 0;
+                border-left: 0;
+                border-radius: 0;
+            }
+
+            .complaint-header {
+                padding: 16px;
+            }
+
+            .message-list {
+                padding: 14px;
+            }
+
+            .complaint-form {
+                grid-template-columns: minmax(0, 1fr) auto auto;
+                gap: 6px;
+                padding: 10px;
+            }
+
+            .file-label,
+            .send-button {
+                padding: 0 11px;
+                font-size: 13px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+        <details class="department-menu" id="department-menu">
+            <summary aria-label="Choose department and view admins" title="Choose department">⋮</summary>
+            <div class="department-menu-panel">
+                <label for="top-department-select">Choose a department</label>
+                <select id="top-department-select">
+                    <option value="">Choose department</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                </select>
+                <div class="department-admin-list" id="department-admin-list" aria-live="polite"></div>
+            </div>
+        </details>
+    </header>
+    <main aria-label="Anonymous complaint chat">
+        <header class="complaint-header">
+            <h1>Anonymous Complaints</h1>
+            <p class="privacy-note">Messages and media are shown without usernames, account details, or posting times; the selected department is visible. Tap the three-dot menu or long-press a post to edit or delete it. Avoid including personal details in your message or media. This demo stores posts in this browser only; they are not shared with other devices.</p>
+        </header>
+        <ul class="message-list" id="complaint-list" aria-live="polite"></ul>
+        <form class="complaint-form" id="complaint-form">
+            <input class="message-input" id="message-input" name="message" maxlength="1500" placeholder="Write a message..." autocomplete="off">
+            <input class="file-input" id="attachment-input" name="attachment" type="file" accept="image/*,video/*">
+            <label class="file-label" for="attachment-input">Photo/video</label>
+            <button class="send-button" type="submit">Send</button>
+            <p class="attachment-name" id="attachment-name" hidden></p>
+        </form>
+        <p class="status" id="complaint-status" role="status" aria-live="polite"></p>
+    </main>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg>
+                <span>Home</span>
+            </a>
+            <a href="search.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+                <span>Search</span>
+            </a>
+            <a href="message%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path><path d="m8 12 2.5 2.5L16 9"></path></svg>
+                <span>Messages</span>
+            </a>
+            <a href="complaint-box.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path><path d="M8 9h8M8 13h5"></path></svg>
+                <span>Complain</span>
+            </a>
+            <a href="posts.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                <span>Post</span>
+            </a>
+            <a href="profile.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    <script>
+        const databaseName = "student-wish-complaints";
+        const list = document.getElementById("complaint-list");
+        const form = document.getElementById("complaint-form");
+        const messageInput = document.getElementById("message-input");
+        const attachmentInput = document.getElementById("attachment-input");
+        const attachmentName = document.getElementById("attachment-name");
+        const status = document.getElementById("complaint-status");
+        const topDepartmentSelect = document.getElementById("top-department-select");
+        const departmentAdminList = document.getElementById("department-admin-list");
+        const maxAttachmentSize = 15 * 1024 * 1024;
+        let database;
+        let mediaUrls = [];
+        let messagePressTimer;
+        let pressedMessage;
+        let pressStartPoint;
+        const customDepartments = (localStorage.getItem("studentWishCustomDepartments") || "")
+            .split("\n")
+            .map(function (department) {
+                return department.trim();
+            })
+            .filter(Boolean);
+        customDepartments.forEach(function (department) {
+            const alreadyListed = Array.from(topDepartmentSelect.options).some(function (option) {
+                return option.value.toLocaleLowerCase() === department.toLocaleLowerCase();
+            });
+            if (!alreadyListed) {
+                const option = document.createElement("option");
+                option.value = department;
+                option.textContent = department;
+                topDepartmentSelect.append(option);
+            }
+        });
+
+        function getAdminDirectory() {
+            const storedDirectory = localStorage.getItem("studentWishAdminDirectory");
+            if (!storedDirectory) {
+                return [];
+            }
+            const directory = JSON.parse(storedDirectory);
+            if (!Array.isArray(directory)) {
+                throw new Error("The saved admin directory is invalid.");
+            }
+            return directory.filter(function (admin) {
+                return admin && typeof admin.username === "string" &&
+                    typeof admin.department === "string";
+            });
+        }
+
+        function renderDepartmentAdmins(department) {
+            departmentAdminList.replaceChildren();
+            if (!department) {
+                return;
+            }
+
+            let admins;
+            try {
+                admins = getAdminDirectory().filter(function (admin) {
+                    return admin.department.toLocaleLowerCase() === department.toLocaleLowerCase();
+                });
+            } catch (error) {
+                const message = document.createElement("p");
+                message.className = "department-admin-empty";
+                message.textContent = "Could not load admin profiles: " + error.message;
+                departmentAdminList.append(message);
+                return;
+            }
+
+            if (admins.length === 0) {
+                const empty = document.createElement("p");
+                empty.className = "department-admin-empty";
+                empty.textContent = "No admin profiles are registered for this department in this browser.";
+                departmentAdminList.append(empty);
+                return;
+            }
+
+            admins.forEach(function (admin) {
+                const card = document.createElement("a");
+                const bio = localStorage.getItem(
+                    "studentWishAdminBio:" + admin.username.toLocaleLowerCase()
+                );
+                card.className = "department-admin-card";
+                card.href = "admin%20profile.html?admin=" + encodeURIComponent(admin.username);
+                const name = document.createElement("strong");
+                name.textContent = admin.username;
+                const departmentName = document.createElement("span");
+                departmentName.textContent = admin.department;
+                card.append(name, departmentName);
+                if (bio) {
+                    const bioText = document.createElement("span");
+                    bioText.textContent = bio;
+                    card.append(bioText);
+                }
+                departmentAdminList.append(card);
+            });
+        }
+
+        topDepartmentSelect.addEventListener("change", function () {
+            renderDepartmentAdmins(topDepartmentSelect.value);
+        });
+
+        function openDatabase() {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Anonymous post storage is not available in this browser."));
+                    return;
+                }
+
+                const request = window.indexedDB.open(databaseName, 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("messages")) {
+                        request.result.createObjectStore("messages", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open anonymous post storage."));
+                };
+            });
+        }
+
+        function getMessages() {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("messages", "readonly");
+                const request = transaction.objectStore("messages").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not load anonymous posts."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not load anonymous posts."));
+                };
+            });
+        }
+
+        function saveMessage(message) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("messages", "readwrite");
+                transaction.objectStore("messages").add(message);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not save your message."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not save your message."));
+                };
+            });
+        }
+
+        function updateMessage(message) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("messages", "readwrite");
+                transaction.objectStore("messages").put(message);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not update the anonymous post."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not update the anonymous post."));
+                };
+            });
+        }
+
+        function deleteMessage(id) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("messages", "readwrite");
+                transaction.objectStore("messages").delete(id);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not delete the anonymous post."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not delete the anonymous post."));
+                };
+            });
+        }
+
+        function renderMessages(messages) {
+            mediaUrls.forEach(URL.revokeObjectURL);
+            mediaUrls = [];
+            list.replaceChildren();
+            messages.sort(function (first, second) {
+                return first.createdAt - second.createdAt;
+            });
+
+            if (messages.length === 0) {
+                const empty = document.createElement("li");
+                empty.className = "empty-state";
+                empty.textContent = "No messages yet. Start the conversation with an anonymous message or photo/video.";
+                list.append(empty);
+                return;
+            }
+
+            messages.forEach(function (message) {
+                const item = document.createElement("li");
+                item.className = "complaint-message";
+                item.dataset.messageId = message.id;
+                const content = document.createElement("div");
+                content.className = "complaint-content";
+                if (message.department) {
+                    const department = document.createElement("p");
+                    department.className = "complaint-department";
+                    department.textContent = "Department: " + message.department;
+                    content.append(department);
+                }
+                if (message.text) {
+                    const text = document.createElement("p");
+                    text.className = "complaint-text";
+                    text.textContent = message.text;
+                    content.append(text);
+                }
+                if (message.attachment instanceof Blob) {
+                    const mediaUrl = URL.createObjectURL(message.attachment);
+                    mediaUrls.push(mediaUrl);
+                    const media = document.createElement(message.attachmentType.startsWith("video/") ? "video" : "img");
+                    media.className = "complaint-media";
+                    media.src = mediaUrl;
+                    if (media instanceof HTMLVideoElement) {
+                        media.controls = true;
+                        media.playsInline = true;
+                        media.preload = "metadata";
+                        media.setAttribute("aria-label", "Anonymous video");
+                    } else {
+                        media.alt = "Anonymous image";
+                    }
+                    content.append(media);
+                }
+                item.append(content);
+                const menuToggle = document.createElement("button");
+                menuToggle.type = "button";
+                menuToggle.className = "complaint-menu-toggle";
+                menuToggle.setAttribute("aria-label", "Complaint options");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.textContent = "⋮";
+                item.append(menuToggle);
+                const options = document.createElement("div");
+                options.className = "complaint-options";
+                options.hidden = true;
+                options.setAttribute("aria-label", "Complaint options");
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.dataset.action = "edit";
+                editButton.textContent = "Edit";
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.dataset.action = "delete";
+                deleteButton.textContent = "Delete";
+                options.append(editButton, deleteButton);
+                item.append(options);
+                list.append(item);
+            });
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function showMessageOptions(item) {
+            list.querySelectorAll(".complaint-options").forEach(function (options) {
+                options.hidden = true;
+                options.parentElement.querySelector(".complaint-menu-toggle").setAttribute("aria-expanded", "false");
+            });
+            const options = item.querySelector(".complaint-options");
+            if (options) {
+                options.hidden = false;
+                item.querySelector(".complaint-menu-toggle").setAttribute("aria-expanded", "true");
+            }
+        }
+
+        function startMessageEdit(item, message) {
+            const content = item.querySelector(".complaint-content");
+            const options = item.querySelector(".complaint-options");
+            options.hidden = true;
+            content.hidden = true;
+            const editForm = document.createElement("form");
+            editForm.className = "complaint-editor";
+            const textInput = document.createElement("textarea");
+            textInput.maxLength = 1500;
+            textInput.setAttribute("aria-label", "Edit anonymous message");
+            textInput.value = message.text;
+            editForm.append(textInput);
+
+            const attachmentInputEdit = document.createElement("input");
+            attachmentInputEdit.type = "file";
+            attachmentInputEdit.accept = "image/*,video/*";
+            attachmentInputEdit.setAttribute("aria-label", "Replace photo or video");
+            const attachmentLabel = document.createElement("label");
+            attachmentLabel.textContent = message.attachment instanceof Blob ? "Replace photo/video" : "Add photo/video";
+            attachmentLabel.append(attachmentInputEdit);
+            editForm.append(attachmentLabel);
+
+            const departmentInputEdit = document.createElement("select");
+            departmentInputEdit.className = "department-select";
+            departmentInputEdit.setAttribute("aria-label", "Complaint department");
+            const noDepartmentOption = document.createElement("option");
+            noDepartmentOption.value = "";
+            noDepartmentOption.textContent = "Choose department";
+            departmentInputEdit.append(noDepartmentOption);
+            Array.from(topDepartmentSelect.options).slice(1).forEach(function (option) {
+                departmentInputEdit.append(option.cloneNode(true));
+            });
+            departmentInputEdit.value = message.department || "";
+            editForm.append(departmentInputEdit);
+
+            let removeAttachmentInput;
+            if (message.attachment instanceof Blob) {
+                const removeLabel = document.createElement("label");
+                removeAttachmentInput = document.createElement("input");
+                removeAttachmentInput.type = "checkbox";
+                removeLabel.append(removeAttachmentInput, document.createTextNode(" Remove current photo/video"));
+                editForm.append(removeLabel);
+            }
+
+            const buttons = document.createElement("div");
+            buttons.className = "complaint-edit-actions";
+            const saveButton = document.createElement("button");
+            saveButton.type = "submit";
+            saveButton.textContent = "Save";
+            const cancelButton = document.createElement("button");
+            cancelButton.type = "button";
+            cancelButton.textContent = "Cancel";
+            buttons.append(saveButton, cancelButton);
+            editForm.append(buttons);
+            item.append(editForm);
+            textInput.focus();
+            textInput.setSelectionRange(textInput.value.length, textInput.value.length);
+            cancelButton.addEventListener("click", function () {
+                getMessages().then(renderMessages).catch(function (error) {
+                    status.textContent = error.message;
+                });
+            });
+            editForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const replacement = attachmentInputEdit.files[0] || null;
+                if (replacement && !replacement.type.startsWith("image/") && !replacement.type.startsWith("video/")) {
+                    status.textContent = "Choose an image or video file.";
+                    return;
+                }
+                if (replacement && replacement.size > maxAttachmentSize) {
+                    status.textContent = "Choose a file smaller than 15 MB.";
+                    return;
+                }
+                const updatedText = textInput.value.trim();
+                const removeAttachment = removeAttachmentInput && removeAttachmentInput.checked;
+                const updatedAttachment = replacement || (removeAttachment ? null : message.attachment);
+                if (!updatedText && !updatedAttachment) {
+                    status.textContent = "A post needs a message or photo/video.";
+                    return;
+                }
+                const previous = {
+                    text: message.text,
+                    department: message.department,
+                    attachment: message.attachment,
+                    attachmentType: message.attachmentType
+                };
+                message.text = updatedText;
+                message.department = departmentInputEdit.value;
+                message.attachment = updatedAttachment;
+                message.attachmentType = updatedAttachment ? (replacement ? replacement.type : message.attachmentType) : "";
+                status.textContent = "Saving changes...";
+                updateMessage(message).then(getMessages).then(function (messages) {
+                    renderMessages(messages);
+                    status.textContent = "Anonymous post updated.";
+                }).catch(function (error) {
+                    message.text = previous.text;
+                    message.department = previous.department;
+                    message.attachment = previous.attachment;
+                    message.attachmentType = previous.attachmentType;
+                    status.textContent = error.message;
+                    getMessages().then(renderMessages).catch(function (loadError) {
+                        status.textContent = loadError.message;
+                    });
+                });
+            });
+        }
+
+        list.addEventListener("pointerdown", function (event) {
+            const item = event.target.closest(".complaint-message");
+            if (!item || event.target.closest(".complaint-options, .complaint-editor")) {
+                return;
+            }
+            clearTimeout(messagePressTimer);
+            pressedMessage = item;
+            pressStartPoint = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+            messagePressTimer = setTimeout(function () {
+                if (pressedMessage === item && item.isConnected) {
+                    showMessageOptions(item);
+                }
+            }, 550);
+        });
+
+        document.addEventListener("pointermove", function (event) {
+            if (pressedMessage && pressStartPoint && event.pointerId === pressStartPoint.pointerId &&
+                Math.hypot(event.clientX - pressStartPoint.x, event.clientY - pressStartPoint.y) > 12) {
+                clearTimeout(messagePressTimer);
+                pressedMessage = null;
+            }
+        });
+
+        ["pointerup", "pointercancel"].forEach(function (eventName) {
+            document.addEventListener(eventName, function () {
+                clearTimeout(messagePressTimer);
+                pressedMessage = null;
+                pressStartPoint = null;
+            });
+        });
+
+        list.addEventListener("contextmenu", function (event) {
+            const item = event.target.closest(".complaint-message");
+            if (item) {
+                event.preventDefault();
+                showMessageOptions(item);
+            }
+        });
+
+        list.addEventListener("click", function (event) {
+            const menuToggle = event.target.closest(".complaint-menu-toggle");
+            if (menuToggle) {
+                const item = menuToggle.closest(".complaint-message");
+                const options = item.querySelector(".complaint-options");
+                if (options.hidden) {
+                    showMessageOptions(item);
+                } else {
+                    options.hidden = true;
+                    menuToggle.setAttribute("aria-expanded", "false");
+                }
+                return;
+            }
+            const actionButton = event.target.closest("[data-action]");
+            if (!actionButton) {
+                return;
+            }
+            const item = actionButton.closest(".complaint-message");
+            const messageId = item.dataset.messageId;
+            getMessages().then(function (messages) {
+                const message = messages.find(function (entry) {
+                    return entry.id === messageId;
+                });
+                if (!message) {
+                    throw new Error("This anonymous post is no longer available.");
+                }
+                if (actionButton.dataset.action === "edit") {
+                    startMessageEdit(item, message);
+                    return;
+                }
+                if (actionButton.dataset.action === "delete" && window.confirm("Delete this anonymous post?")) {
+                    status.textContent = "Deleting post...";
+                    return deleteMessage(messageId).then(getMessages).then(function (updatedMessages) {
+                        renderMessages(updatedMessages);
+                        status.textContent = "Anonymous post deleted.";
+                    });
+                }
+            }).catch(function (error) {
+                status.textContent = error.message;
+            });
+        });
+
+        attachmentInput.addEventListener("change", function () {
+            const file = attachmentInput.files[0];
+            attachmentName.hidden = !file;
+            attachmentName.textContent = file ? (file.type.startsWith("video/") ? "Video selected." : "Photo selected.") : "";
+        });
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const text = messageInput.value.trim();
+            const attachment = attachmentInput.files[0] || null;
+            if (!text && !attachment) {
+                status.textContent = "Write a message or choose a photo/video.";
+                return;
+            }
+            if (!topDepartmentSelect.value) {
+                status.textContent = "Choose a department for your complaint.";
+                document.getElementById("department-menu").open = true;
+                topDepartmentSelect.focus();
+                return;
+            }
+            if (attachment && !attachment.type.startsWith("image/") && !attachment.type.startsWith("video/")) {
+                status.textContent = "Choose an image or video file.";
+                return;
+            }
+            if (attachment && attachment.size > maxAttachmentSize) {
+                status.textContent = "Choose a file smaller than 15 MB.";
+                return;
+            }
+
+            status.textContent = "Sending...";
+            saveMessage({
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+                text: text,
+                department: topDepartmentSelect.value,
+                attachment: attachment,
+                attachmentType: attachment ? attachment.type : "",
+                createdAt: Date.now()
+            }).then(function () {
+                form.reset();
+                topDepartmentSelect.value = "";
+                departmentAdminList.replaceChildren();
+                attachmentName.hidden = true;
+                attachmentName.textContent = "";
+                return getMessages();
+            }).then(function (messages) {
+                renderMessages(messages);
+                status.textContent = "Your post was added anonymously.";
+                messageInput.focus();
+            }).catch(function (error) {
+                status.textContent = error.message;
+            });
+        });
+
+        openDatabase().then(function (openedDatabase) {
+            database = openedDatabase;
+            return getMessages();
+        }).then(function (messages) {
+            renderMessages(messages);
+        }).catch(function (error) {
+            status.textContent = error.message;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Student Wish</title>
+    <style>
+        body {
+            display: grid;
+            min-height: 100vh;
+            margin: 0;
+            place-items: center;
+            background-color: rgb(74, 71, 71);
+            color: rgb(229, 6, 6);
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: min(100% - 32px, 420px);
+            padding: 32px;
+            box-sizing: border-box;
+            border: 1px solid rgb(5, 3, 20);
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #888;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background-color: rgb(10, 13, 13);
+            color: rgb(26, 76, 225);
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .department-adder {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .department-adder[hidden] {
+            display: none;
+        }
+
+        .department-adder button {
+            width: auto;
+            justify-self: start;
+            margin-top: 0;
+            padding: 9px 14px;
+        }
+
+        .status {
+            min-height: 1.4em;
+            line-height: 1.4;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: rgb(9, 9, 41);
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+<body>
+    <main>
+        <h1>Admin Login</h1>
+        <form id="admin-login-form">
+            <label for="username">Admin Username id</label>
+            <input id="username" name="username" type="text" autocomplete="username" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <label for="department">Department</label>
+            <select id="department" name="department" required>
+                <option value="">Choose your department</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+                <option value="__add_department__">Add a department...</option>
+            </select>
+            <div class="department-adder" id="department-adder" hidden>
+                <label for="new-department">New department name</label>
+                <input id="new-department" type="text" maxlength="60" autocomplete="off">
+                <button id="add-department" type="button">Add department</button>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+        <p class="status" id="login-message" role="status" aria-live="polite"></p>
+        <a class="back-link" href="login.html">Back to login options</a>
+    </main>
+    <script>
+        const departmentSelect = document.getElementById("department");
+        const departmentAdder = document.getElementById("department-adder");
+        const newDepartmentInput = document.getElementById("new-department");
+        const addDepartmentButton = document.getElementById("add-department");
+        const loginMessage = document.getElementById("login-message");
+        const customDepartmentsStorageKey = "studentWishCustomDepartments";
+        const addDepartmentOption = departmentSelect.querySelector('option[value="__add_department__"]');
+        const customDepartments = (localStorage.getItem(customDepartmentsStorageKey) || "")
+            .split("\n")
+            .map(function (department) {
+                return department.trim();
+            })
+            .filter(Boolean);
+
+        customDepartments.forEach(function (department) {
+            const alreadyListed = Array.from(departmentSelect.options).some(function (option) {
+                return option.value.toLocaleLowerCase() === department.toLocaleLowerCase();
+            });
+            if (!alreadyListed) {
+                const option = document.createElement("option");
+                option.value = department;
+                option.textContent = department;
+                departmentSelect.insertBefore(option, addDepartmentOption);
+            }
+        });
+
+        function addCustomDepartment() {
+            const department = newDepartmentInput.value.trim();
+            if (!department) {
+                loginMessage.textContent = "Enter a department name.";
+                newDepartmentInput.focus();
+                return;
+            }
+
+            const existingOption = Array.from(departmentSelect.options).find(function (option) {
+                return option.value !== "__add_department__" &&
+                    option.value.toLocaleLowerCase() === department.toLocaleLowerCase();
+            });
+            if (existingOption) {
+                departmentSelect.value = existingOption.value;
+                loginMessage.textContent = "That department already exists.";
+            } else {
+                customDepartments.push(department);
+                try {
+                    localStorage.setItem(customDepartmentsStorageKey, customDepartments.join("\n"));
+                } catch (error) {
+                    customDepartments.pop();
+                    loginMessage.textContent = "Could not save the department: " + error.message;
+                    return;
+                }
+                const option = document.createElement("option");
+                option.value = department;
+                option.textContent = department;
+                departmentSelect.insertBefore(option, addDepartmentOption);
+                departmentSelect.value = department;
+                loginMessage.textContent = "Department added.";
+            }
+
+            departmentAdder.hidden = true;
+            newDepartmentInput.value = "";
+        }
+
+        departmentSelect.addEventListener("change", function () {
+            if (departmentSelect.value === "__add_department__") {
+                departmentSelect.value = "";
+                departmentAdder.hidden = false;
+                loginMessage.textContent = "";
+                newDepartmentInput.focus();
+                return;
+            }
+            departmentAdder.hidden = true;
+        });
+        addDepartmentButton.addEventListener("click", addCustomDepartment);
+        newDepartmentInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addCustomDepartment();
+            }
+        });
+
+        document.getElementById("admin-login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            if (!username) {
+                loginMessage.textContent = "Enter your admin username.";
+                return;
+            }
+            if (!departmentSelect.value) {
+                loginMessage.textContent = "Choose your department.";
+                departmentSelect.focus();
+                return;
+            }
+            try {
+                localStorage.setItem("studentWishAdminUsername", username);
+                localStorage.setItem("studentWishAdminDepartment", departmentSelect.value);
+                const directoryKey = "studentWishAdminDirectory";
+                const savedDirectory = localStorage.getItem(directoryKey);
+                const directory = savedDirectory ? JSON.parse(savedDirectory) : [];
+                if (!Array.isArray(directory)) {
+                    throw new Error("The saved admin directory is invalid.");
+                }
+                const existingAdmin = directory.find(function (admin) {
+                    return admin && typeof admin.username === "string" &&
+                        admin.username.toLocaleLowerCase() === username.toLocaleLowerCase();
+                });
+                if (existingAdmin) {
+                    existingAdmin.username = username;
+                    existingAdmin.department = departmentSelect.value;
+                } else {
+                    directory.push({ username: username, department: departmentSelect.value });
+                }
+                localStorage.setItem(directoryKey, JSON.stringify(directory));
+                window.location.href = "admin%20profile.html";
+            } catch (error) {
+                loginMessage.textContent = "Could not save admin details: " + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

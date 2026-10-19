@@ -1,0 +1,86 @@
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    background: #17151a;
+}
+
+:root[data-theme="dark"] body {
+    background: #17151a !important;
+    color: #95969c !important;
+}
+
+:root[data-theme="dark"] body.image-background-page {
+    background-image: linear-gradient(#07112455, #07112455), url("student wish logo.jpeg") !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+.image-background-page {
+    background-color: #071124;
+    background-image: linear-gradient(#07112455, #07112455), url("student wish logo.jpeg");
+    background-position: center;
+    background-size: cover ;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+:root[data-theme="dark"] body * {
+    border-color: #494451 !important;
+    color: #e4e1b0 !important;
+}
+
+:root[data-theme="dark"] body :is(
+    header,
+    nav,
+    main,
+    section,
+    article,
+    aside,
+    form,
+    details,
+    dialog,
+    [class*="card"],
+    [class*="panel"],
+    [class*="composer"],
+    [class*="options"],
+    [class*="dialog"],
+    [class*="message"],
+    [class*="bubble"],
+    [class*="conversation-button"],
+    [class*="conversation-list"],
+    [class*="chat-view"],
+    [class*="feed-post"],
+    [class*="comment-item"],
+    [class*="search-result"]
+) {
+    background-color: #24212a !important;
+}
+
+:root[data-theme="dark"] body :is(
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select,
+    button,
+    summary
+) {
+    border-color: #58515f !important;
+    background-color: #302c36 !important;
+    color: #d0ccd2 !important;
+}
+
+:root[data-theme="dark"] body a {
+    color: #d9e1b9 !important;
+}
+
+:root[data-theme="dark"] body input::placeholder,
+:root[data-theme="dark"] body textarea::placeholder {
+    color: #624572 !important;
+    opacity: 1;
+}
+
+:root[data-theme="dark"] body img,
+:root[data-theme="dark"] body video,
+:root[data-theme="dark"] body svg {
+    color: inherit;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wish</title>
+    <style>
+        body {
+            display: grid;
+            min-height: 100vh;
+            margin: 0;
+            place-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        main {
+            width: min(100% - 32px, 480px);
+            padding: 32px 24px;
+            border: 1px solid #ffffff3b;
+            border-radius: 18px;
+            background: #071124b8;
+            box-shadow: 0 18px 60px #0007;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            margin: 0 0 22px;
+            font-family: Georgia, serif;
+            font-size: clamp(32px, 8vw, 48px);
+        }
+
+        .action {
+            display: inline-block;
+            margin: 8px;
+            padding: 10px 20px;
+            border: 1px solid #50caff;
+            border-radius: 8px;
+            background-color: #118cc9;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .action:hover,
+        .action:focus-visible {
+            background-color: #0873a8;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body class="image-background-page"></body>
+    
+        
+        <div>
+            <a class="action" href="login.html">Login</a>
+            <a class="action" href="login.html">Sign Up</a>
+        </div>
+
+
+</html>

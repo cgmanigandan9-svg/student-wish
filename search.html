@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f4f0">
+    <title>Search - Student Wish</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+            color: #28251f;
+            background: #f7f4f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 84px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e4ded6;
+        }
+
+        .brand {
+            color: #28251f;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        main {
+            width: min(100% - 32px, 760px);
+            margin: 32px auto;
+        }
+
+        h1 {
+            margin: 0 0 18px;
+            font-family: Georgia, serif;
+            font-size: 28px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .department-filter {
+            display: grid;
+            gap: 7px;
+            margin-top: 12px;
+            color: #514b44;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-input {
+            min-width: 0;
+            flex: 1;
+            padding: 13px 15px;
+            border: 1px solid #d8d0c7;
+            border-radius: 9px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+        }
+
+        .department-select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d8d0c7;
+            border-radius: 9px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+        }
+
+        .department-adder {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .department-adder[hidden] {
+            display: none;
+        }
+
+        .department-adder input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #d8d0c7;
+            border-radius: 9px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+        }
+
+        .department-adder button {
+            justify-self: start;
+            padding: 9px 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .department-status {
+            min-height: 1.3em;
+            margin: 0;
+            color: #655c53;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        .search-button {
+            padding: 0 18px;
+            border: 0;
+            border-radius: 9px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-status {
+            min-height: 1.5em;
+            color: #655c53;
+            font-size: 14px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .result-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid #e4ded6;
+            border-radius: 8px;
+            background: #fffdfa;
+        }
+
+        .result-author {
+            display: block;
+            padding: 10px;
+            color: #754b66;
+            font-size: 13px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .result-department {
+            margin: -4px 10px 10px;
+            color: #655c53;
+            font-size: 12px;
+        }
+
+        .result-photo {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: #e9e2d9;
+        }
+
+        .result-caption {
+            margin: 0;
+            padding: 10px;
+            color: #514b44;
+            font-size: 13px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .empty-results {
+            grid-column: 1 / -1;
+            margin: 0;
+            padding: 36px 20px;
+            border: 1px solid #e4ded6;
+            border-radius: 9px;
+            background: #fffdfa;
+            color: #655c53;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            z-index: 10;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+            border-top: 1px solid #e4ded6;
+            background: #fffdfa;
+        }
+
+        .bottom-nav-inner {
+            display: grid;
+            width: min(100%, 560px);
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            min-height: 48px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 8px;
+            color: #655c53;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .bottom-nav a[aria-current="page"] {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bottom-nav svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        @media (max-width: 560px) {
+            .topbar {
+                padding: 16px;
+            }
+
+            .results {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+    </header>
+    <main>
+        <h1>Search</h1>
+        <form class="search-form" id="search-form" role="search">
+            <label class="visually-hidden" for="search-input">Search posts or usernames</label>
+            <input class="search-input" id="search-input" type="search" placeholder="Search posts or usernames..." autocomplete="off">
+            <button class="search-button" type="submit">Search</button>
+        </form>
+        <label class="department-filter" for="department-filter">
+            Department
+            <select class="department-select" id="department-filter">
+                <option value="">All departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+                <option value="__add_department__">Add a department...</option>
+            </select>
+        </label>
+        <div class="department-adder" id="department-adder" hidden>
+            <label for="new-department">New department name</label>
+            <input id="new-department" type="text" maxlength="60" autocomplete="off">
+            <button id="add-department" type="button">Add department</button>
+        </div>
+        <p class="department-status" id="department-status" role="status" aria-live="polite"></p>
+        <p class="search-status" id="search-status" role="status" aria-live="polite">Search posts by username, caption, or department.</p>
+        <section class="results" id="search-results" aria-label="Search results"></section>
+    </main>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg>
+                <span>Home</span>
+            </a>
+            <a href="search.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+                <span>Search</span>
+            </a>
+            <a href="message%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path><path d="m8 12 2.5 2.5L16 9"></path></svg>
+                <span>Messages</span>
+            </a>
+            <a href="complaint-box.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path><path d="M8 9h8M8 13h5"></path></svg>
+                <span>Complain</span>
+            </a>
+            <a href="posts.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                <span>Post</span>
+            </a>
+            <a href="profile.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    <script>
+        const searchForm = document.getElementById("search-form");
+        const searchInput = document.getElementById("search-input");
+        const departmentFilter = document.getElementById("department-filter");
+        const departmentAdder = document.getElementById("department-adder");
+        const newDepartmentInput = document.getElementById("new-department");
+        const addDepartmentButton = document.getElementById("add-department");
+        const departmentStatus = document.getElementById("department-status");
+        const customDepartmentsStorageKey = "studentWishCustomDepartments";
+        const searchStatus = document.getElementById("search-status");
+        const searchResults = document.getElementById("search-results");
+        const databaseNames = ["student-wish-profile", "student-wish-admin-profile"];
+        let imageUrls = [];
+        let latestSearch = 0;
+        const addDepartmentOption = departmentFilter.querySelector('option[value="__add_department__"]');
+        const customDepartments = (localStorage.getItem(customDepartmentsStorageKey) || "")
+            .split("\n")
+            .map(function (department) {
+                return department.trim();
+            })
+            .filter(Boolean);
+        customDepartments.forEach(function (department) {
+            const option = document.createElement("option");
+            option.value = department;
+            option.textContent = department;
+            departmentFilter.insertBefore(option, addDepartmentOption);
+        });
+
+        function addCustomDepartment() {
+            const department = newDepartmentInput.value.trim();
+            if (!department) {
+                departmentStatus.textContent = "Enter a department name.";
+                return;
+            }
+
+            const existingOption = Array.from(departmentFilter.options).find(function (option) {
+                return option.value !== "__add_department__" &&
+                    option.value.toLocaleLowerCase() === department.toLocaleLowerCase();
+            });
+            if (existingOption) {
+                departmentFilter.value = existingOption.value;
+                departmentStatus.textContent = "That department already exists.";
+            } else {
+                customDepartments.push(department);
+                localStorage.setItem(customDepartmentsStorageKey, customDepartments.join("\n"));
+                const option = document.createElement("option");
+                option.value = department;
+                option.textContent = department;
+                departmentFilter.insertBefore(option, addDepartmentOption);
+                departmentFilter.value = department;
+                departmentStatus.textContent = "Department added.";
+            }
+
+            departmentAdder.hidden = true;
+            newDepartmentInput.value = "";
+            searchPosts();
+        }
+
+        function openDatabase(databaseName) {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Search storage is not available in this browser."));
+                    return;
+                }
+
+                const request = window.indexedDB.open(databaseName, 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("posts")) {
+                        request.result.createObjectStore("posts", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open saved posts."));
+                };
+            });
+        }
+
+        function getPosts(databaseName) {
+            return openDatabase(databaseName).then(function (database) {
+                return new Promise(function (resolve, reject) {
+                    const transaction = database.transaction("posts", "readonly");
+                    const request = transaction.objectStore("posts").getAll();
+                    request.onsuccess = function () {
+                        resolve(request.result.map(function (post) {
+                            return {
+                                post: post,
+                                databaseName: databaseName
+                            };
+                        }));
+                    };
+                    request.onerror = function () {
+                        reject(request.error || new Error("Could not search saved posts."));
+                    };
+                    transaction.oncomplete = function () {
+                        database.close();
+                    };
+                    transaction.onabort = function () {
+                        database.close();
+                        reject(transaction.error || new Error("Could not search saved posts."));
+                    };
+                });
+            });
+        }
+
+        function clearResultImages() {
+            imageUrls.forEach(function (url) {
+                URL.revokeObjectURL(url);
+            });
+            imageUrls = [];
+        }
+
+        function showEmptyResults(message) {
+            const empty = document.createElement("p");
+            empty.className = "empty-results";
+            empty.textContent = message;
+            searchResults.append(empty);
+        }
+
+        function getPostDepartment(entry, author) {
+            return entry.post.department ||
+                localStorage.getItem("studentWishDepartment:" + author.toLocaleLowerCase()) ||
+                "";
+        }
+
+        function renderResults(entries, query, department) {
+            clearResultImages();
+            searchResults.replaceChildren();
+            const normalizedQuery = query.toLocaleLowerCase();
+            const matchingPosts = entries.filter(function (entry) {
+                const fallbackAuthor = entry.databaseName === "student-wish-admin-profile" ? "Admin" : "Student";
+                const author = entry.post.author || fallbackAuthor;
+                const caption = entry.post.caption || "";
+                const postDepartment = getPostDepartment(entry, author);
+                const matchesQuery = author.toLocaleLowerCase().includes(normalizedQuery) ||
+                    caption.toLocaleLowerCase().includes(normalizedQuery);
+                return matchesQuery && (!department || postDepartment === department);
+            });
+
+            if (matchingPosts.length === 0) {
+                const hasFilter = query || department;
+                searchStatus.textContent = hasFilter ? "No matching posts found." : "Showing all saved posts.";
+                showEmptyResults(hasFilter
+                    ? "No posts match your search and department. Try another selection."
+                    : "There are no posts yet. Create a post from your profile.");
+                return;
+            }
+
+            searchStatus.textContent = matchingPosts.length +
+                (matchingPosts.length === 1 ? " post found." : " posts found.") +
+                (department ? " in " + department + "." : "");
+            matchingPosts.sort(function (first, second) {
+                return second.post.createdAt - first.post.createdAt;
+            });
+
+            matchingPosts.forEach(function (entry) {
+                const post = entry.post;
+                const authorName = post.author ||
+                    (entry.databaseName === "student-wish-admin-profile" ? "Admin" : "Student");
+                const postDepartment = getPostDepartment(entry, authorName);
+                const card = document.createElement("article");
+                card.className = "result-card";
+                const author = document.createElement("span");
+                author.className = "result-author";
+                author.textContent = authorName;
+                card.append(author);
+                if (postDepartment) {
+                    const departmentName = document.createElement("p");
+                    departmentName.className = "result-department";
+                    departmentName.textContent = postDepartment;
+                    card.append(departmentName);
+                }
+
+                if (post.photo) {
+                    const image = document.createElement("img");
+                    const imageUrl = URL.createObjectURL(post.photo);
+                    imageUrls.push(imageUrl);
+                    image.className = "result-photo";
+                    image.src = imageUrl;
+                    image.alt = post.caption ? "Post photo: " + post.caption : "Post photo";
+                    card.append(image);
+                }
+                if (post.caption) {
+                    const caption = document.createElement("p");
+                    caption.className = "result-caption";
+                    caption.textContent = post.caption;
+                    card.append(caption);
+                }
+                searchResults.append(card);
+            });
+        }
+
+        function searchPosts() {
+            const searchId = ++latestSearch;
+            const query = searchInput.value.trim();
+            const department = departmentFilter.value;
+            searchStatus.textContent = "Searching posts...";
+            searchResults.replaceChildren();
+            Promise.all(databaseNames.map(getPosts))
+                .then(function (resultSets) {
+                    if (searchId !== latestSearch) {
+                        return;
+                    }
+                    renderResults(resultSets.flat(), query, department);
+                })
+                .catch(function (error) {
+                    if (searchId !== latestSearch) {
+                        return;
+                    }
+                    searchStatus.textContent = error.message;
+                    searchResults.replaceChildren();
+                });
+        }
+
+        searchForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            searchPosts();
+        });
+        searchInput.addEventListener("input", searchPosts);
+        departmentFilter.addEventListener("change", function () {
+            if (departmentFilter.value === "__add_department__") {
+                departmentFilter.value = "";
+                departmentAdder.hidden = false;
+                newDepartmentInput.focus();
+                searchPosts();
+                return;
+            }
+            departmentAdder.hidden = true;
+            searchPosts();
+        });
+        addDepartmentButton.addEventListener("click", addCustomDepartment);
+        newDepartmentInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addCustomDepartment();
+            }
+        });
+        searchPosts();
+    </script>
+</body>
+</html>

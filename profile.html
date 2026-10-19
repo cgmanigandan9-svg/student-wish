@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f4f0">
+    <title>Student Profile - Student Wish<a href="index.html" class="brand"></a></title>
+    
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+            color: #28251f;
+            background: #f7f4f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding-bottom: 92px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e4ded6;
+        }
+
+        .brand {
+            color: #28251f;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .account-menu {
+            position: relative;
+        }
+
+        .account-menu summary {
+            padding: 9px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            color: #655c53;
+            font-size: 14px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .account-menu summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .account-menu summary::after {
+            margin-left: 8px;
+            content: "▾";
+        }
+
+        .account-options {
+            position: absolute;
+            z-index: 20;
+            top: calc(100% + 8px);
+            right: 0;
+            display: grid;
+            min-width: 180px;
+            padding: 6px;
+            border: 1px solid #e4ded6;
+            border-radius: 9px;
+            background: #fffdfa;
+            box-shadow: 0 8px 24px #422a2720;
+        }
+
+        .account-options a,
+        .account-options button {
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: #28251f;
+            font: inherit;
+            font-size: 14px;
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .account-options a:hover,
+        .account-options button:hover,
+        .account-options a:focus-visible,
+        .account-options button:focus-visible {
+            background: #f3eee8;
+        }
+
+        main {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 48px 24px 64px;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 36px;
+            align-items: center;
+            margin-bottom: 44px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 132px;
+            height: 132px;
+            place-items: center;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f5c784, #d78263 55%, #754b66);
+            box-shadow: 0 2px 12px #422a271a;
+            color: white;
+            font-family: Georgia, serif;
+            font-size: 46px;
+        }
+
+        .profile-info h1 {
+            display: inline-block;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .profile-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .profile-action-button,
+        .settings-button {
+            min-height: 36px;
+            padding: 8px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            background: #fffdfa;
+            color: #28251f;
+            font: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .settings-button {
+            display: inline-grid;
+            width: 38px;
+            padding: 7px;
+            place-items: center;
+        }
+
+        .settings-button svg {
+            width: 21px;
+            height: 21px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        .profile-action-button:hover,
+        .settings-button:hover,
+        .profile-action-button:focus-visible,
+        .settings-button:focus-visible {
+            background: #f3eee8;
+        }
+
+        .post-count {
+            margin: 0 0 18px;
+            color: #514b44;
+        }
+
+        .post-count strong {
+            color: #28251f;
+        }
+
+        .display-name {
+            margin: 0 0 6px;
+            font-weight: bold;
+        }
+
+        .bio {
+            margin: 0;
+            color: #655c53;
+            line-height: 1.6;
+        }
+
+        .composer {
+            margin-bottom: 40px;
+            padding: 22px;
+            border: 1px solid #e4ded6;
+            border-radius: 10px;
+            background: #fffdfa;
+        }
+
+        .composer h2 {
+            margin: 0 0 8px;
+            font-family: Georgia, serif;
+            font-size: 21px;
+            font-weight: 500;
+        }
+
+        .composer-hint {
+            margin: 0 0 16px;
+            color: #655c53;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .composer label {
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .composer textarea,
+        .composer select,
+        .composer input[type="file"] {
+            width: 100%;
+            color: inherit;
+            font: inherit;
+        }
+
+        .composer textarea {
+            min-height: 90px;
+            padding: 12px;
+            resize: vertical;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+        }
+
+        .composer select {
+            padding: 10px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+            background: #fffdfa;
+        }
+
+        .department-adder {
+            margin-top: 10px;
+        }
+
+        .department-adder[hidden] {
+            display: none;
+        }
+
+        .department-adder input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        .department-adder button {
+            margin-top: 8px;
+            padding: 8px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+            background: #f3eee8;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .department-status {
+            margin: 6px 0 0;
+            color: #655c53;
+            font-size: 13px;
+        }
+
+        .composer input[type="file"] {
+            padding: 8px 0;
+        }
+
+        .publish-button {
+            margin-top: 14px;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 6px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .publish-button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        .post-status {
+            min-height: 1.4em;
+            margin: 12px 0 0;
+            color: #655c53;
+            font-size: 14px;
+        }
+
+        .section-heading {
+            margin: 0 0 16px;
+            color: #655c53;
+            font-size: 12px;
+            letter-spacing: 0.16em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .user-post {
+            min-width: 0;
+            overflow: hidden;
+            border-radius: 4px;
+            background: white;
+            box-shadow: 0 1px 5px #422a271a;
+        }
+
+        .post-open-button {
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: white;
+            color: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .post-open-button:focus-visible {
+            outline: 3px solid #754b66;
+            outline-offset: -3px;
+        }
+
+        .post-open-button img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .user-post-caption {
+            margin: 0;
+            padding: 10px;
+            color: #514b44;
+            font-size: 14px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .post-likes {
+            margin: 0;
+            padding: 0 10px 8px;
+            color: #514b44;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+
+        .post-comments {
+            padding: 0 10px 10px;
+        }
+
+        .comment-toggle {
+            padding: 0;
+            border: 0;
+            background: none;
+            color: #754b66;
+            font: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .comment-toggle:hover,
+        .comment-toggle:focus-visible {
+            text-decoration: underline;
+        }
+
+        .comment-content[hidden] {
+            display: none;
+        }
+
+        .comment-list {
+            margin: 0 0 10px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .comment-item {
+            margin-top: 6px;
+            color: #514b44;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-author {
+            margin-right: 5px;
+            color: #28251f;
+            font-weight: bold;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-input {
+            min-width: 0;
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .comment-button {
+            padding: 8px 10px;
+            border: 0;
+            border-radius: 6px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .comment-button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        .empty-posts {
+            grid-column: 1 / -1;
+            margin: 0;
+            padding: 28px 12px;
+            color: #655c53;
+            text-align: center;
+        }
+
+        .post-dialog {
+            width: min(1000px, calc(100% - 32px));
+            max-width: none;
+            max-height: min(760px, calc(100% - 32px));
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+            border-radius: 12px;
+            background: #fffdfa;
+            color: #28251f;
+            box-shadow: 0 18px 70px #0005;
+        }
+
+        .post-dialog::backdrop {
+            background: #171411b8;
+        }
+
+        .settings-dialog,
+        .bio-dialog {
+            width: min(440px, calc(100% - 32px));
+            max-width: none;
+            padding: 0;
+            border: 1px solid #e4ded6;
+            border-radius: 12px;
+            background: #fffdfa;
+            color: #28251f;
+            box-shadow: 0 18px 70px #0005;
+        }
+
+        .settings-content,
+        .bio-content {
+            padding: 20px;
+        }
+
+        .settings-header,
+        .bio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .settings-header h2,
+        .bio-header h2 {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .settings-close,
+        .bio-close {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: #f0ebe4;
+            color: #28251f;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .settings-section-title {
+            margin: 22px 0 8px;
+            color: #655c53;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .settings-option,
+        .settings-link {
+            display: flex;
+            min-height: 52px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e4ded6;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            text-decoration: none;
+        }
+
+        .settings-option input {
+            width: 20px;
+            height: 20px;
+            accent-color: #754b66;
+        }
+
+        .settings-link {
+            width: 100%;
+            border-top: 0;
+            border-right: 0;
+            border-left: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .settings-note {
+            margin: 14px 0 0;
+            color: #655c53;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .bio-content label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bio-content textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 11px;
+            resize: vertical;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+            line-height: 1.5;
+        }
+
+        .bio-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .bio-actions button {
+            padding: 9px 14px;
+            border: 0;
+            border-radius: 7px;
+            background: #f0ebe4;
+            color: #28251f;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .bio-actions button[type="submit"] {
+            background: #754b66;
+            color: white;
+            font-weight: bold;
+        }
+
+        body[data-theme="dark"] {
+            background: #171411;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .topbar,
+        body[data-theme="dark"] .bottom-nav {
+            border-color: #413a3d;
+            background: #211d20;
+        }
+
+        body[data-theme="dark"] .brand,
+        body[data-theme="dark"] .post-count strong,
+        body[data-theme="dark"] .comment-author {
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .account-menu summary,
+        body[data-theme="dark"] .account-options,
+        body[data-theme="dark"] .profile-action-button,
+        body[data-theme="dark"] .settings-button,
+        body[data-theme="dark"] .composer,
+        body[data-theme="dark"] .user-post,
+        body[data-theme="dark"] .settings-dialog,
+        body[data-theme="dark"] .bio-dialog,
+        body[data-theme="dark"] .post-dialog,
+        body[data-theme="dark"] .account-options button,
+        body[data-theme="dark"] .account-options a {
+            border-color: #413a3d;
+            background-color: #211d20;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .account-options a:hover,
+        body[data-theme="dark"] .account-options button:hover,
+        body[data-theme="dark"] .profile-action-button:hover,
+        body[data-theme="dark"] .settings-button:hover,
+        body[data-theme="dark"] .profile-action-button:focus-visible,
+        body[data-theme="dark"] .settings-button:focus-visible {
+            background: #342d31;
+        }
+
+        body[data-theme="dark"] .post-count,
+        body[data-theme="dark"] .display-name,
+        body[data-theme="dark"] .bio,
+        body[data-theme="dark"] .composer-hint,
+        body[data-theme="dark"] .user-post-caption,
+        body[data-theme="dark"] .post-likes,
+        body[data-theme="dark"] .comment-item,
+        body[data-theme="dark"] .settings-section-title,
+        body[data-theme="dark"] .settings-note {
+            color: #c3bab2;
+        }
+
+        body[data-theme="dark"] .composer textarea,
+        body[data-theme="dark"] .composer select,
+        body[data-theme="dark"] .composer input[type="file"],
+        body[data-theme="dark"] .comment-input,
+        body[data-theme="dark"] .bio-content textarea {
+            border-color: #51494c;
+            background: #171411;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .settings-option,
+        body[data-theme="dark"] .settings-link,
+        body[data-theme="dark"] .dialog-header,
+        body[data-theme="dark"] .dialog-caption {
+            border-color: #413a3d;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .settings-close,
+        body[data-theme="dark"] .bio-close,
+        body[data-theme="dark"] .bio-actions button {
+            background: #342d31;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .bio-actions button[type="submit"] {
+            background: #754b66;
+        }
+
+        .dialog-layout {
+            display: grid;
+            min-height: 400px;
+            max-height: min(760px, calc(100vh - 32px));
+            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        }
+
+        .dialog-media {
+            display: grid;
+            min-width: 0;
+            min-height: 0;
+            place-items: center;
+            background: #211d20;
+        }
+
+        .dialog-media img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-height: min(760px, calc(100vh - 32px));
+            object-fit: contain;
+        }
+
+        .dialog-media[hidden] {
+            display: none;
+        }
+
+        .dialog-panel {
+            display: flex;
+            min-width: 0;
+            min-height: 0;
+            flex-direction: column;
+        }
+
+        .dialog-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid #eee9e2;
+        }
+
+        .dialog-header h2 {
+            margin: 0;
+            overflow-wrap: anywhere;
+            font-size: 16px;
+        }
+
+        .dialog-close {
+            width: 36px;
+            height: 36px;
+            flex: 0 0 auto;
+            border: 0;
+            border-radius: 50%;
+            background: #f0ebe4;
+            color: #28251f;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .dialog-caption {
+            margin: 0;
+            padding: 16px;
+            border-bottom: 1px solid #eee9e2;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .dialog-caption:empty {
+            display: none;
+        }
+
+        .dialog-actions {
+            padding: 12px 16px 0;
+        }
+
+        .like-button {
+            padding: 6px 0;
+            border: 0;
+            background: transparent;
+            color: #754b66;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .like-button[aria-pressed="true"] {
+            color: #bd344c;
+        }
+
+        .dialog-like-count {
+            margin: 5px 0 0;
+            color: #514b44;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .dialog-comments {
+            min-height: 0;
+            flex: 1;
+            margin: 0;
+            padding: 14px 16px;
+            overflow-y: auto;
+            list-style: none;
+        }
+
+        .dialog-comments .comment-item:first-child {
+            margin-top: 0;
+        }
+
+        .dialog-comment-form {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid #eee9e2;
+        }
+
+        .dialog-comment-input {
+            min-width: 0;
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        .dialog-comment-submit {
+            padding: 8px 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .post {
+            display: grid;
+            aspect-ratio: 1;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 4px;
+            color: white;
+            font-size: clamp(36px, 8vw, 68px);
+            text-shadow: 0 2px 12px #24191266;
+            transition: transform 160ms ease;
+        }
+
+        .post:hover {
+            transform: scale(1.02);
+        }
+
+        .post:nth-child(1) {
+            background: linear-gradient(145deg, #e4b36f, #b65e4c 60%, #563d50);
+        }
+
+        .post:nth-child(2) {
+            background: linear-gradient(145deg, #a7c8bd, #528b83 60%, #31585c);
+        }
+
+        .post:nth-child(3) {
+            background: linear-gradient(145deg, #f0d5a1, #dc9767 60%, #986254);
+        }
+
+        .post:nth-child(4) {
+            background: linear-gradient(145deg, #c4b9d8, #82769f 60%, #4a4667);
+        }
+
+        .post:nth-child(5) {
+            background: linear-gradient(145deg, #e8c8b8, #b77d6d 60%, #764e56);
+        }
+
+        .post:nth-child(6) {
+            background: linear-gradient(145deg, #b4cb91, #789360 60%, #4e685a);
+        }
+
+        .post-caption {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            z-index: 10;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+            border-top: 1px solid #e4ded6;
+            background: #fffdfa;
+        }
+
+        .bottom-nav-inner {
+            display: grid;
+            width: min(100%, 560px);
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            min-height: 48px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 8px;
+            color: #655c53;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .bottom-nav a[aria-current="page"] {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bottom-nav svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        @media (max-width: 560px) {
+            .topbar {
+                padding: 16px;
+            }
+
+            main {
+                padding: 32px 16px 48px;
+            }
+
+            .profile-header {
+                grid-template-columns: 88px 1fr;
+                gap: 18px;
+                margin-bottom: 32px;
+            }
+
+            .avatar {
+                width: 82px;
+                height: 82px;
+                border-width: 3px;
+                font-size: 32px;
+            }
+
+            .profile-info h1 {
+                display: inline-block;
+                font-size: 20px;
+            }
+
+            .profile-actions {
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+
+            .profile-action-button {
+                min-height: 34px;
+                padding: 7px 9px;
+                font-size: 13px;
+            }
+
+            .settings-button {
+                width: 34px;
+                min-height: 34px;
+            }
+
+            .post-count {
+                margin-bottom: 12px;
+            }
+
+            .post-grid {
+                gap: 4px;
+            }
+
+            .user-post-caption {
+                padding: 7px;
+                font-size: 12px;
+            }
+
+            .post-comments {
+                padding: 0 7px 7px;
+            }
+
+            .post {
+                border-radius: 0;
+            }
+
+            .post-dialog {
+                width: 100%;
+                max-height: 100%;
+                border-radius: 0;
+            }
+
+            .dialog-layout {
+                min-height: 100%;
+                max-height: 100dvh;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: minmax(0, 1fr) auto;
+            }
+
+            .dialog-media img {
+                max-height: 45dvh;
+            }
+
+            .dialog-panel {
+                max-height: 55dvh;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .post {
+                transition: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+        <details class="account-menu">
+            <summary>Account</summary>
+            <nav class="account-options" aria-label="Account options">
+                <a href="student%20sinin.html">Add account</a>
+                <a href="login.html">Switch account</a>
+                <a href="student%20sinin.html">Login</a>
+                <button id="logout-button" type="button">Logout</button>
+            </nav>
+        </details>
+    </header>
+    <main>
+        <section class="profile-header" aria-labelledby="profile-name">
+            <div class="avatar" id="avatar" aria-hidden="true">S</div>
+            <div class="profile-info">
+                <div class="profile-actions">
+                    <h1 id="profile-name"></h1>
+                    <button class="profile-action-button" id="edit-profile-button" type="button">Edit profile</button>
+                    <button class="settings-button" id="open-settings-button" type="button" aria-label="Settings" title="Settings">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"></path></svg>
+                    </button>
+                </div>
+                <p class="post-count"><strong></strong> posts</p>
+                <p class="display-name">Student</p>
+                <p class="bio" id="profile-bio"></p>
+            </div>
+        </section>
+        <section class="composer" aria-labelledby="composer-heading">
+            <h2 id="composer-heading">Share a post</h2>
+            <p class="composer-hint">Share a thought, a moment, or an image of anything you like.</p>
+            <form id="post-form">
+                <label for="post-department">Department</label>
+                <select id="post-department" name="department" required>
+                    <option value="">Choose your department</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                    <option value="__add_department__">Add a department...</option>
+                </select>
+                <div class="department-adder" id="post-department-adder" hidden>
+                    <label for="new-post-department">New department name</label>
+                    <input id="new-post-department" type="text" maxlength="60" autocomplete="off">
+                    <button id="add-post-department" type="button">Add department</button>
+                </div>
+                <p class="department-status" id="post-department-status" role="status" aria-live="polite"></p>
+                <label for="post-caption-input">Caption</label>
+                <textarea id="post-caption-input" name="caption" maxlength="500" placeholder="What would you like to share?"></textarea>
+                <label for="post-image-input">Add a photo (optional, up to 5 MB)</label>
+                <p>Create image as you require then upload it.</p>
+                <input id="post-image-input" name="photo" type="file" accept="image/*">
+                <button class="publish-button" id="publish-button" type="submit">Share post</button>
+            </form>
+            <p class="post-status" id="post-status" role="status" aria-live="polite"></p>
+        </section>
+        <section aria-labelledby="posts-heading">
+            <h2 class="section-heading" id="posts-heading">Posts</h2>
+            <div class="post-grid" id="post-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <dialog class="post-dialog" id="post-dialog" aria-labelledby="post-dialog-title">
+        <div class="dialog-layout">
+            <div class="dialog-media" id="dialog-media">
+                <img id="dialog-image" alt="">
+            </div>
+            <section class="dialog-panel" aria-label="Post details and comments">
+                <header class="dialog-header">
+                    <h2 id="post-dialog-title"></h2>
+                    <button class="dialog-close" id="dialog-close" type="button" aria-label="Close post">&times;</button>
+                </header>
+                <p class="dialog-caption" id="dialog-caption"></p>
+                <div class="dialog-actions">
+                    <button class="like-button" id="like-button" type="button" aria-pressed="false">Like</button>
+                    <p class="dialog-like-count" id="dialog-like-count"></p>
+                </div>
+                <ul class="dialog-comments" id="dialog-comments" aria-label="Comments"></ul>
+                <form class="dialog-comment-form" id="dialog-comment-form">
+                    <label class="visually-hidden" for="dialog-comment-input">Add a comment</label>
+                    <input class="dialog-comment-input" id="dialog-comment-input" name="comment" maxlength="300" placeholder="Add a comment..." required>
+                    <button class="dialog-comment-submit" type="submit">Post</button>
+                </form>
+            </section>
+        </div>
+    </dialog>
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+        <section class="settings-content">
+            <header class="settings-header">
+                <h2 id="settings-title">Settings and activity</h2>
+                <button class="settings-close" id="settings-close" type="button" aria-label="Close settings">&times;</button>
+            </header>
+            <p class="settings-section-title">Your account</p>
+            <button class="settings-link" id="settings-edit-bio" type="button">Edit profile bio <span aria-hidden="true">›</span></button>
+            <a class="settings-link" href="student%20sinin.html">Add account <span aria-hidden="true">›</span></a>
+            <a class="settings-link" href="login.html">Switch account <span aria-hidden="true">›</span></a>
+            <p class="settings-section-title">App preferences</p>
+            <label class="settings-option" for="dark-mode-toggle">
+                <span>Dark mode</span>
+                <input id="dark-mode-toggle" type="checkbox">
+            </label>
+            <p class="settings-note">Your bio and appearance preference are saved in this browser.</p>
+        </section>
+    </dialog>
+    <dialog class="bio-dialog" id="bio-dialog" aria-labelledby="bio-title">
+        <form class="bio-content" id="bio-form">
+            <header class="bio-header">
+                <h2 id="bio-title">Edit profile bio</h2>
+                <button class="bio-close" id="bio-close" type="button" aria-label="Close bio editor">&times;</button>
+            </header>
+            <label for="bio-input">Bio</label>
+            <textarea id="bio-input" maxlength="150" placeholder="Write something about yourself..."></textarea>
+            <p class="settings-note">Up to 150 characters.</p>
+            <div class="bio-actions">
+                <button id="bio-cancel" type="button">Cancel</button>
+                <button type="submit">Save bio</button>
+            </div>
+        </form>
+    </dialog>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg>
+                <span>Home</span>
+            </a>
+            <a href="search.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+                <span>Search</span>
+            </a>
+            <a href="message%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path><path d="m8 12 2.5 2.5L16 9"></path></svg>
+                <span>Messages</span>
+            </a>
+            <a href="complaint-box.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path><path d="M8 9h8M8 13h5"></path></svg>
+                <span>Complain</span>
+            </a>
+            <a href="posts.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                <span>Post</span>
+            </a>
+            <a href="profile.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    <script>
+        const username = localStorage.getItem("studentWishUsername");
+        const currentUsername = username || "Student";
+        const profileBio = document.getElementById("profile-bio");
+        const bioStorageKey = "studentWishBio:" + currentUsername.toLocaleLowerCase();
+        const bioDialog = document.getElementById("bio-dialog");
+        const bioForm = document.getElementById("bio-form");
+        const bioInput = document.getElementById("bio-input");
+        const settingsDialog = document.getElementById("settings-dialog");
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const darkModeStorageKey = "studentWishDarkMode";
+        const savedBio = localStorage.getItem(bioStorageKey) || "";
+        profileBio.textContent = savedBio || "Add a bio to tell people about yourself.";
+        const darkModeEnabled = localStorage.getItem(darkModeStorageKey) === "true";
+        document.body.dataset.theme = darkModeEnabled ? "dark" : "light";
+        darkModeToggle.checked = darkModeEnabled;
+        if (username) {
+            document.getElementById("profile-name").textContent = username;
+            document.getElementById("avatar").textContent = username.charAt(0).toUpperCase();
+        }
+
+        function openBioEditor() {
+            bioInput.value = localStorage.getItem(bioStorageKey) || "";
+            bioDialog.showModal();
+            bioInput.focus();
+        }
+
+        document.getElementById("edit-profile-button").addEventListener("click", openBioEditor);
+        document.getElementById("settings-edit-bio").addEventListener("click", function () {
+            settingsDialog.close();
+            openBioEditor();
+        });
+        document.getElementById("open-settings-button").addEventListener("click", function () {
+            settingsDialog.showModal();
+        });
+        document.getElementById("settings-close").addEventListener("click", function () {
+            settingsDialog.close();
+        });
+        document.getElementById("bio-close").addEventListener("click", function () {
+            bioDialog.close();
+        });
+        document.getElementById("bio-cancel").addEventListener("click", function () {
+            bioDialog.close();
+        });
+        bioForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const bio = bioInput.value.trim();
+            if (bio) {
+                localStorage.setItem(bioStorageKey, bio);
+            } else {
+                localStorage.removeItem(bioStorageKey);
+            }
+            profileBio.textContent = bio || "Add a bio to tell people about yourself.";
+            bioDialog.close();
+        });
+        darkModeToggle.addEventListener("change", function () {
+            document.body.dataset.theme = darkModeToggle.checked ? "dark" : "light";
+            localStorage.setItem(darkModeStorageKey, String(darkModeToggle.checked));
+        });
+
+        document.getElementById("logout-button").addEventListener("click", function () {
+            localStorage.removeItem("studentWishUsername");
+            window.location.href = "login.html";
+        });
+
+        const postForm = document.getElementById("post-form");
+        const postGrid = document.getElementById("post-grid");
+        const postStatus = document.getElementById("post-status");
+        const publishButton = document.getElementById("publish-button");
+        const departmentSelect = document.getElementById("post-department");
+        const departmentStorageKey = "studentWishDepartment:" + currentUsername.toLocaleLowerCase();
+        const customDepartmentsStorageKey = "studentWishCustomDepartments";
+        const departmentAdder = document.getElementById("post-department-adder");
+        const newDepartmentInput = document.getElementById("new-post-department");
+        const addDepartmentButton = document.getElementById("add-post-department");
+        const departmentStatus = document.getElementById("post-department-status");
+        const postCount = document.querySelector(".post-count strong");
+        const postDialog = document.getElementById("post-dialog");
+        const dialogMedia = document.getElementById("dialog-media");
+        const dialogImage = document.getElementById("dialog-image");
+        const dialogTitle = document.getElementById("post-dialog-title");
+        const dialogCaption = document.getElementById("dialog-caption");
+        const dialogLikeButton = document.getElementById("like-button");
+        const dialogLikeCount = document.getElementById("dialog-like-count");
+        const dialogComments = document.getElementById("dialog-comments");
+        const dialogCommentForm = document.getElementById("dialog-comment-form");
+        const dialogCommentInput = document.getElementById("dialog-comment-input");
+        const maxPhotoSize = 5 * 1024 * 1024;
+        let postDatabase;
+        let postImageUrls = [];
+        let dialogImageUrl = null;
+        let activeDialogPostId = null;
+        const expandedCommentPosts = new Set();
+        const addDepartmentOption = departmentSelect.querySelector('option[value="__add_department__"]');
+        const customDepartments = (localStorage.getItem(customDepartmentsStorageKey) || "")
+            .split("\n")
+            .map(function (department) {
+                return department.trim();
+            })
+            .filter(Boolean);
+        customDepartments.forEach(function (department) {
+            const option = document.createElement("option");
+            option.value = department;
+            option.textContent = department;
+            departmentSelect.insertBefore(option, addDepartmentOption);
+        });
+        departmentSelect.value = localStorage.getItem(departmentStorageKey) || "";
+        departmentSelect.addEventListener("change", function () {
+            if (departmentSelect.value === "__add_department__") {
+                departmentSelect.value = localStorage.getItem(departmentStorageKey) || "";
+                departmentAdder.hidden = false;
+                newDepartmentInput.focus();
+                return;
+            }
+            departmentAdder.hidden = true;
+            if (departmentSelect.value) {
+                localStorage.setItem(departmentStorageKey, departmentSelect.value);
+            } else {
+                localStorage.removeItem(departmentStorageKey);
+            }
+        });
+        function addCustomDepartment() {
+            const department = newDepartmentInput.value.trim();
+            if (!department) {
+                departmentStatus.textContent = "Enter a department name.";
+                return;
+            }
+
+            const existingOption = Array.from(departmentSelect.options).find(function (option) {
+                return option.value !== "__add_department__" &&
+                    option.value.toLocaleLowerCase() === department.toLocaleLowerCase();
+            });
+            if (existingOption) {
+                departmentSelect.value = existingOption.value;
+                departmentStatus.textContent = "That department already exists.";
+            } else {
+                customDepartments.push(department);
+                localStorage.setItem(customDepartmentsStorageKey, customDepartments.join("\n"));
+                const option = document.createElement("option");
+                option.value = department;
+                option.textContent = department;
+                departmentSelect.insertBefore(option, addDepartmentOption);
+                departmentSelect.value = department;
+                departmentStatus.textContent = "Department added.";
+            }
+
+            departmentAdder.hidden = true;
+            newDepartmentInput.value = "";
+            departmentSelect.dispatchEvent(new Event("change"));
+        }
+        addDepartmentButton.addEventListener("click", addCustomDepartment);
+        newDepartmentInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addCustomDepartment();
+            }
+        });
+        publishButton.disabled = true;
+
+        function openPostDatabase() {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Post storage is not available in this browser."));
+                    return;
+                }
+
+                const request = window.indexedDB.open("student-wish-profile", 1);
+                request.onupgradeneeded = function () {
+                    request.result.createObjectStore("posts", { keyPath: "id" });
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open post storage."));
+                };
+                request.onblocked = function () {
+                    reject(new Error("Post storage is busy in another tab. Close other Student Wish tabs and try again."));
+                };
+            });
+        }
+
+        function loadPosts(database) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("posts", "readonly");
+                const request = transaction.objectStore("posts").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not load your posts."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not load your posts."));
+                };
+            });
+        }
+
+        function savePost(database, post) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("posts", "readwrite");
+                transaction.objectStore("posts").add(post);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not save your post."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not save your post."));
+                };
+            });
+        }
+
+        function updatePost(database, post) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("posts", "readwrite");
+                transaction.objectStore("posts").put(post);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not save your comment."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not save your comment."));
+                };
+            });
+        }
+
+        function renderPosts(posts) {
+            postImageUrls.forEach(function (url) {
+                URL.revokeObjectURL(url);
+            });
+            postImageUrls = [];
+            postGrid.replaceChildren();
+            posts.sort(function (first, second) {
+                return second.createdAt - first.createdAt;
+            });
+            postCount.textContent = String(posts.length);
+
+            if (posts.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.className = "empty-posts";
+                emptyMessage.textContent = "Your posts will appear here after you share them.";
+                postGrid.append(emptyMessage);
+                return;
+            }
+
+            posts.forEach(function (post) {
+                const card = document.createElement("article");
+                card.className = "user-post";
+                const openButton = document.createElement("button");
+                openButton.className = "post-open-button";
+                openButton.type = "button";
+                openButton.dataset.postId = post.id;
+                openButton.setAttribute("aria-label", "Open post and view likes and comments");
+                if (post.photo) {
+                    const image = document.createElement("img");
+                    const imageUrl = URL.createObjectURL(post.photo);
+                    postImageUrls.push(imageUrl);
+                    image.src = imageUrl;
+                    image.alt = post.caption ? "Photo: " + post.caption : "Your shared photo";
+                    openButton.append(image);
+                }
+                if (post.caption) {
+                    const caption = document.createElement("p");
+                    caption.className = "user-post-caption";
+                    caption.textContent = post.caption;
+                    openButton.append(caption);
+                }
+                card.append(openButton);
+
+                const likes = Array.isArray(post.likes) ? post.likes.length : 0;
+                if (likes) {
+                    const likeCount = document.createElement("p");
+                    likeCount.className = "post-likes";
+                    likeCount.textContent = likes + (likes === 1 ? " like" : " likes");
+                    card.append(likeCount);
+                }
+
+                const commentsSection = document.createElement("section");
+                commentsSection.className = "post-comments";
+                commentsSection.setAttribute("aria-label", "Comments");
+
+                const commentCount = (post.comments || []).length;
+                const commentsExpanded = expandedCommentPosts.has(post.id);
+                const commentToggle = document.createElement("button");
+                commentToggle.className = "comment-toggle";
+                commentToggle.type = "button";
+                commentToggle.dataset.postId = post.id;
+                commentToggle.setAttribute("aria-controls", "comments-" + post.id);
+                commentToggle.setAttribute("aria-expanded", String(commentsExpanded));
+                commentToggle.textContent = commentsExpanded
+                    ? "Hide comments"
+                    : commentCount
+                        ? "View comments (" + commentCount + ")"
+                        : "Add a comment";
+                commentsSection.append(commentToggle);
+
+                const commentContent = document.createElement("div");
+                commentContent.className = "comment-content";
+                commentContent.id = "comments-" + post.id;
+                commentContent.hidden = !commentsExpanded;
+
+                const commentList = document.createElement("ul");
+                commentList.className = "comment-list";
+                (post.comments || []).forEach(function (comment) {
+                    const item = document.createElement("li");
+                    item.className = "comment-item";
+                    const author = document.createElement("span");
+                    author.className = "comment-author";
+                    author.textContent = comment.author;
+                    const text = document.createElement("span");
+                    text.textContent = comment.text;
+                    item.append(author, text);
+                    commentList.append(item);
+                });
+                commentContent.append(commentList);
+
+                const commentForm = document.createElement("form");
+                commentForm.className = "comment-form";
+                commentForm.dataset.postId = post.id;
+                const commentInput = document.createElement("input");
+                commentInput.className = "comment-input";
+                commentInput.type = "text";
+                commentInput.name = "comment";
+                commentInput.maxLength = 300;
+                commentInput.placeholder = "Add a comment...";
+                commentInput.setAttribute("aria-label", "Write a comment");
+                commentInput.required = true;
+                const commentButton = document.createElement("button");
+                commentButton.className = "comment-button";
+                commentButton.type = "submit";
+                commentButton.textContent = "Comment";
+                commentForm.append(commentInput, commentButton);
+                commentContent.append(commentForm);
+                commentsSection.append(commentContent);
+                card.append(commentsSection);
+                postGrid.append(card);
+            });
+        }
+
+        function renderDialogComments(comments) {
+            dialogComments.replaceChildren();
+            comments.forEach(function (comment) {
+                const item = document.createElement("li");
+                item.className = "comment-item";
+                const author = document.createElement("span");
+                author.className = "comment-author";
+                author.textContent = comment.author;
+                const text = document.createElement("span");
+                text.textContent = comment.text;
+                item.append(author, text);
+                dialogComments.append(item);
+            });
+        }
+
+        function renderDialogPost(post) {
+            if (dialogImageUrl) {
+                URL.revokeObjectURL(dialogImageUrl);
+                dialogImageUrl = null;
+            }
+            activeDialogPostId = post.id;
+            dialogTitle.textContent = currentUsername;
+            dialogCaption.textContent = post.caption || "";
+            if (post.photo) {
+                dialogImageUrl = URL.createObjectURL(post.photo);
+                dialogImage.src = dialogImageUrl;
+                dialogImage.alt = post.caption ? "Photo: " + post.caption : "Post photo";
+                dialogMedia.hidden = false;
+            } else {
+                dialogImage.removeAttribute("src");
+                dialogImage.alt = "";
+                dialogMedia.hidden = true;
+            }
+
+            const likes = Array.isArray(post.likes) ? post.likes : [];
+            const likedByCurrentUser = likes.includes(currentUsername);
+            dialogLikeButton.setAttribute("aria-pressed", String(likedByCurrentUser));
+            dialogLikeButton.textContent = likedByCurrentUser ? "♥ Liked" : "♡ Like";
+            dialogLikeCount.textContent = likes.length
+                ? likes.length + (likes.length === 1 ? " like" : " likes")
+                : "Be the first to like this";
+            renderDialogComments(post.comments || []);
+        }
+
+        function loadPostById(postId) {
+            return loadPosts(postDatabase).then(function (posts) {
+                const post = posts.find(function (item) {
+                    return item.id === postId;
+                });
+                if (!post) {
+                    throw new Error("This post could not be found.");
+                }
+                return post;
+            });
+        }
+
+        function refreshDialogPost() {
+            if (!activeDialogPostId) {
+                return Promise.resolve();
+            }
+            return loadPostById(activeDialogPostId).then(function (post) {
+                renderDialogPost(post);
+                return loadPosts(postDatabase);
+            }).then(renderPosts);
+        }
+
+        openPostDatabase()
+            .then(function (database) {
+                postDatabase = database;
+                return loadPosts(database);
+            })
+            .then(function (posts) {
+                renderPosts(posts);
+                publishButton.disabled = false;
+            })
+            .catch(function (error) {
+                postStatus.textContent = error.message;
+            });
+
+        postForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const caption = document.getElementById("post-caption-input").value.trim();
+            const photoInput = document.getElementById("post-image-input");
+            const photo = photoInput.files[0] || null;
+
+            if (!caption && !photo) {
+                postStatus.textContent = "Write a caption or choose a photo before sharing.";
+                return;
+            }
+            if (photo && !photo.type.startsWith("image/")) {
+                postStatus.textContent = "Choose a valid image file.";
+                return;
+            }
+            if (photo && photo.size > maxPhotoSize) {
+                postStatus.textContent = "Choose an image smaller than 5 MB.";
+                return;
+            }
+            if (!postDatabase) {
+                postStatus.textContent = "Post storage is not ready. Refresh the page and try again.";
+                return;
+            }
+
+            publishButton.disabled = true;
+            postStatus.textContent = "Sharing your post…";
+            const post = {
+                id: Date.now().toString(36) + "-" + Math.random().toString(36).slice(2),
+                author: currentUsername,
+                department: departmentSelect.value,
+                caption: caption,
+                photo: photo,
+                likes: [],
+                comments: [],
+                createdAt: Date.now()
+            };
+            savePost(postDatabase, post)
+                .then(function () {
+                    return loadPosts(postDatabase);
+                })
+                .then(function (posts) {
+                    renderPosts(posts);
+                    postForm.reset();
+                    departmentSelect.value = localStorage.getItem(departmentStorageKey) || "";
+                    postStatus.textContent = "Your post has been shared.";
+                })
+                .catch(function (error) {
+                    postStatus.textContent = "Could not share your post: " + error.message;
+                })
+                .then(function () {
+                    publishButton.disabled = false;
+                });
+        });
+
+        postGrid.addEventListener("click", function (event) {
+            const toggle = event.target.closest(".comment-toggle");
+            if (toggle) {
+                const postId = toggle.dataset.postId;
+                const commentContent = document.getElementById(toggle.getAttribute("aria-controls"));
+                const isExpanded = !commentContent.hidden;
+                commentContent.hidden = isExpanded;
+                toggle.setAttribute("aria-expanded", String(!isExpanded));
+                if (isExpanded) {
+                    expandedCommentPosts.delete(postId);
+                    const count = commentContent.querySelectorAll(".comment-item").length;
+                    toggle.textContent = count
+                        ? "View comments (" + count + ")"
+                        : "Add a comment";
+                } else {
+                    expandedCommentPosts.add(postId);
+                    toggle.textContent = "Hide comments";
+                }
+                return;
+            }
+
+            const openButton = event.target.closest(".post-open-button");
+            if (!openButton || !postDatabase) {
+                return;
+            }
+
+            loadPostById(openButton.dataset.postId)
+                .then(function (post) {
+                    renderDialogPost(post);
+                    postDialog.showModal();
+                })
+                .catch(function (error) {
+                    postStatus.textContent = error.message;
+                });
+        });
+
+        document.getElementById("dialog-close").addEventListener("click", function () {
+            postDialog.close();
+        });
+
+        postDialog.addEventListener("close", function () {
+            activeDialogPostId = null;
+            if (dialogImageUrl) {
+                URL.revokeObjectURL(dialogImageUrl);
+                dialogImageUrl = null;
+            }
+        });
+
+        dialogLikeButton.addEventListener("click", function () {
+            if (!activeDialogPostId || !postDatabase) {
+                return;
+            }
+            dialogLikeButton.disabled = true;
+            loadPostById(activeDialogPostId)
+                .then(function (post) {
+                    post.likes = Array.isArray(post.likes) ? post.likes : [];
+                    const likedIndex = post.likes.indexOf(currentUsername);
+                    if (likedIndex >= 0) {
+                        post.likes.splice(likedIndex, 1);
+                    } else {
+                        post.likes.push(currentUsername);
+                    }
+                    return updatePost(postDatabase, post);
+                })
+                .then(refreshDialogPost)
+                .catch(function (error) {
+                    postStatus.textContent = error.message;
+                })
+                .then(function () {
+                    dialogLikeButton.disabled = false;
+                });
+        });
+
+        dialogCommentForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const commentText = dialogCommentInput.value.trim();
+            if (!commentText || !activeDialogPostId || !postDatabase) {
+                return;
+            }
+
+            const submitButton = dialogCommentForm.querySelector("button[type='submit']");
+            submitButton.disabled = true;
+            loadPostById(activeDialogPostId)
+                .then(function (post) {
+                    post.comments = Array.isArray(post.comments) ? post.comments : [];
+                    post.comments.push({
+                        author: currentUsername,
+                        text: commentText,
+                        createdAt: Date.now()
+                    });
+                    return updatePost(postDatabase, post);
+                })
+                .then(function () {
+                    dialogCommentForm.reset();
+                    return refreshDialogPost();
+                })
+                .catch(function (error) {
+                    postStatus.textContent = error.message;
+                })
+                .then(function () {
+                    submitButton.disabled = false;
+                });
+        });
+
+        postGrid.addEventListener("submit", function (event) {
+            if (!event.target.matches(".comment-form")) {
+                return;
+            }
+            event.preventDefault();
+
+            const commentForm = event.target;
+            const input = commentForm.elements.comment;
+            const commentText = input.value.trim();
+            if (!commentText || !postDatabase) {
+                return;
+            }
+
+            const submitButton = commentForm.querySelector("button[type='submit']");
+            submitButton.disabled = true;
+            loadPosts(postDatabase)
+                .then(function (posts) {
+                    const post = posts.find(function (item) {
+                        return item.id === commentForm.dataset.postId;
+                    });
+                    if (!post) {
+                        throw new Error("Could not find this post.");
+                    }
+                    post.comments = post.comments || [];
+                    post.comments.push({
+                        author: currentUsername,
+                        text: commentText,
+                        createdAt: Date.now()
+                    });
+                    return updatePost(postDatabase, post);
+                })
+                .then(function () {
+                    return loadPosts(postDatabase);
+                })
+                .then(renderPosts)
+                .catch(function (error) {
+                    postStatus.textContent = error.message;
+                })
+                .then(function () {
+                    if (submitButton.isConnected) {
+                        submitButton.disabled = false;
+                    }
+                });
+        });
+    </script>
+</body>
+</html>

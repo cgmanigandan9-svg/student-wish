@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Username - Student Wish</title>
+    <style>
+        body {
+            display: grid;
+            min-height: 100vh;
+            margin: 0;
+            place-items: center;
+            background-color: rgb(74, 71, 71);
+            color: rgb(71, 48, 172);
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: min(100% - 32px, 420px);
+            padding: 32px;
+            box-sizing: border-box;
+            border: 1px solid rgb(180, 22, 133);
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #888;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background-color: rgb(10, 13, 13);
+            color: rgb(152, 81, 185);
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: aqua;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+<body>
+    <main>
+        <h1>Create Username</h1>
+        <form id="create-username-form">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" minlength="3" required>
+            <button type="submit">Create Username</button>
+        </form>
+        <a class="back-link" href="index.html">login page</a>
+    </main>
+    <script>
+        document.getElementById("create-username-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            localStorage.setItem("studentWishUsername", username);
+            window.location.href = "profile.html";
+        });
+    </script>
+</body>
+</html>

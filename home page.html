@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#faf9f6">
+    <title>Home - Student Wish</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <style>
+        :root { color-scheme: light; font-family: Arial, sans-serif; color: #26232b; background: #faf9f6; }
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; margin: 0; padding-bottom: 78px; background: #faf9f6; }
+        button, input { font: inherit; }
+        .topbar { position: sticky; z-index: 5; top: 0; display: flex; height: 62px; align-items: center; justify-content: space-between; padding: 0 max(20px, calc((100vw - 1040px) / 2)); border-bottom: 1px solid #e9e6e1; background: #fff; }
+        .brand { color: #26232b; font: bold 25px Georgia, serif; letter-spacing: -1px; text-decoration: none; }
+        .top-actions { display: flex; align-items: center; gap: 14px; }
+        .icon-link { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 50%; color: #29252c; text-decoration: none; }
+        .icon-link:hover { background: #f3f0ed; }
+        .icon-link svg, .bottom-nav svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+        .page-layout { display: grid; width: min(100% - 32px, 975px); grid-template-columns: minmax(0, 610px) 290px; gap: 58px; margin: 28px auto; }
+        .feed-column { min-width: 0; }
+        .stories { display: flex; gap: 16px; overflow-x: auto; margin-bottom: 22px; padding: 16px; border: 1px solid #e9e6e1; border-radius: 10px; background: #fff; scrollbar-width: thin; }
+        .story { display: grid; min-width: 62px; justify-items: center; gap: 7px; padding: 0; border: 0; background: transparent; color: #4d4851; font-size: 11px; cursor: pointer; }
+        .story-ring { display: grid; width: 58px; height: 58px; place-items: center; padding: 3px; border-radius: 50%; background: linear-gradient(35deg, #f7a63b, #e74973 52%, #9254c8); }
+        .story:first-child .story-ring { background: #ded9e0; }
+        .story-avatar, .post-avatar, .profile-avatar { display: grid; place-items: center; border-radius: 50%; background: linear-gradient(145deg, #f6c784, #d78263 55%, #754b66); color: white; font-family: Georgia, serif; font-weight: bold; }
+        .story-avatar { width: 50px; height: 50px; border: 2px solid white; font-size: 18px; }
+        .story:first-child .story-avatar { background: #f8f7f4; color: #754b66; font: 25px Arial, sans-serif; }
+        .story-name { overflow: hidden; width: 62px; text-overflow: ellipsis; white-space: nowrap; }
+        .feed-heading, .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+        .feed { display: grid; gap: 22px; }
+        .post-card { overflow: hidden; border: 1px solid #e9e6e1; border-radius: 10px; background: #fff; }
+        .post-header { display: flex; min-height: 62px; align-items: center; gap: 11px; padding: 10px 14px; }
+        .post-avatar { width: 38px; height: 38px; flex: 0 0 auto; font-size: 16px; }
+        .post-author-details { min-width: 0; flex: 1; }
+        .post-author { overflow: hidden; color: #29252c; font-size: 13px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; }
+        .post-meta { margin-top: 3px; color: #77717a; font-size: 11px; }
+        .post-menu { color: #514c54; font-size: 20px; letter-spacing: 2px; }
+        .post-photo { display: block; width: 100%; max-height: 720px; aspect-ratio: 1 / 1; object-fit: cover; background: #f0eeeb; }
+        .post-text-card { display: grid; min-height: 190px; place-items: center; padding: 34px; background: linear-gradient(145deg, #f6eee7, #eee8f1); color: #46364a; font: clamp(19px, 4vw, 29px)/1.45 Georgia, serif; text-align: center; overflow-wrap: anywhere; white-space: pre-wrap; }
+        .post-actions { display: flex; align-items: center; gap: 14px; padding: 10px 14px 0; }
+        .post-action { display: inline-flex; align-items: center; gap: 5px; padding: 4px 0; border: 0; background: none; color: #38323c; font-size: 13px; cursor: pointer; }
+        .post-action svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+        .like-button[aria-pressed="true"], .like-button[aria-pressed="true"] svg { color: #d83f61; }
+        .like-button[aria-pressed="true"] svg { fill: #d83f61; }
+        .like-count { margin: 7px 14px 0; color: #39343c; font-size: 12px; font-weight: bold; }
+        .post-caption { margin: 8px 14px 0; color: #39343c; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+        .caption-author, .comment-author { margin-right: 5px; font-weight: bold; }
+        .comments-toggle { margin: 8px 14px 0; padding: 0; border: 0; background: none; color: #77717a; font-size: 12px; cursor: pointer; }
+        .comments-section { padding: 9px 14px 14px; }
+        .comments-section[hidden] { display: none; }
+        .comment-list { display: grid; gap: 7px; margin: 0 0 10px; padding: 0; list-style: none; }
+        .comment { font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+        .comment-form { display: flex; gap: 8px; }
+        .comment-input { min-width: 0; flex: 1; padding: 9px 0; border: 0; border-bottom: 1px solid #e9e6e1; background: transparent; color: inherit; font-size: 13px; }
+        .comment-input:focus { outline: none; border-color: #754b66; }
+        .comment-submit { border: 0; background: none; color: #754b66; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .feed-status, .empty-feed { color: #69636d; font-size: 14px; line-height: 1.5; }
+        .empty-feed { padding: 36px 24px; border: 1px solid #e9e6e1; border-radius: 10px; background: white; text-align: center; }
+        .empty-feed a { color: #754b66; font-weight: bold; }
+        .sidebar { position: sticky; top: 90px; align-self: start; padding-top: 12px; }
+        .profile-shortcut { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; color: inherit; text-decoration: none; }
+        .profile-avatar { width: 48px; height: 48px; font-size: 20px; }
+        .profile-shortcut-name { font-size: 13px; font-weight: bold; }
+        .profile-shortcut-label { display: block; margin-top: 4px; color: #77717a; font-size: 12px; }
+        .sidebar-card { padding: 18px; border: 1px solid #e9e6e1; border-radius: 10px; background: white; }
+        .sidebar-card h2 { margin: 0 0 9px; font: 18px Georgia, serif; }
+        .sidebar-card p { margin: 0; color: #69636d; font-size: 13px; line-height: 1.5; }
+        .sidebar-links { display: flex; flex-wrap: wrap; gap: 10px 15px; margin-top: 15px; }
+        .sidebar-links a { color: #754b66; font-size: 12px; font-weight: bold; text-decoration: none; }
+        .bottom-nav { position: fixed; z-index: 10; right: 0; bottom: 0; left: 0; display: flex; justify-content: center; padding: 8px 12px max(8px, env(safe-area-inset-bottom)); border-top: 1px solid #e9e6e1; background: #fff; }
+        .bottom-nav-inner { display: grid; width: min(100%, 560px); grid-template-columns: repeat(6, 1fr); }
+        .bottom-nav a { display: flex; min-height: 48px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 8px; color: #69636d; font-size: 11px; text-decoration: none; }
+        .bottom-nav a[aria-current="page"] { color: #754b66; font-weight: bold; }
+        .bottom-nav svg { width: 22px; height: 22px; }
+        @media (max-width: 800px) { .page-layout { display: block; width: min(100% - 24px, 610px); margin: 16px auto; } .sidebar { display: none; } .stories { margin-bottom: 14px; } }
+        @media (max-width: 560px) {
+            .topbar { height: 56px; padding: 0 16px; } .brand { font-size: 23px; } .top-actions { gap: 8px; }
+            .page-layout { width: 100%; margin: 0 auto; } .stories { margin: 0 0 10px; padding: 14px 12px; border-right: 0; border-left: 0; border-radius: 0; }
+            .feed { gap: 10px; } .post-card { border-right: 0; border-left: 0; border-radius: 0; } .post-photo { max-height: 620px; }
+        }
+        :root[data-theme="dark"] body { background: #17151a !important; color: #eee9f0 !important; }
+        :root[data-theme="dark"] body * { color: #eee9f0 !important; }
+        :root[data-theme="dark"] body :is(.topbar, .stories, .post-card, .sidebar-card, .bottom-nav, .empty-feed) {
+            border-color: #494451 !important;
+            background-color: #24212a !important;
+        }
+        :root[data-theme="dark"] body .post-text-card { background: #302c36 !important; }
+        :root[data-theme="dark"] body a { color: #e8a6cb !important; }
+        :root[data-theme="dark"] body .like-button[aria-pressed="true"] { color: #ff829d !important; }
+        :root[data-theme="dark"] body .post-meta,
+        :root[data-theme="dark"] body .profile-shortcut-label,
+        :root[data-theme="dark"] body .feed-status { color: #c1bac7 !important; }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+        <nav class="top-actions" aria-label="Quick actions">
+            <a class="icon-link" href="posts.html" aria-label="Create a post" title="Create a post"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></a>
+            <a class="icon-link" href="message%20page.html" aria-label="Messages" title="Messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path></svg></a>
+        </nav>
+    </header>
+    <main class="page-layout">
+        <section class="feed-column" aria-labelledby="feed-heading">
+            <h1 class="feed-heading" id="feed-heading">Home feed</h1>
+            <section class="stories" id="stories" aria-label="Stories"></section>
+            <p class="feed-status" id="feed-status" role="status" aria-live="polite"></p>
+            <section class="feed" id="post-feed" aria-label="Recent posts"></section>
+        </section>
+        <aside class="sidebar" aria-label="Your profile and shortcuts">
+            <a class="profile-shortcut" href="profile.html">
+                <span class="profile-avatar" id="profile-avatar" aria-hidden="true">S</span>
+                <span><span class="profile-shortcut-name" id="profile-name">Student</span><span class="profile-shortcut-label">Your profile</span></span>
+            </a>
+            <section class="sidebar-card">
+                <h2>Make it yours</h2>
+                <p>Share a moment, explore your department, or check in with your community.</p>
+                <nav class="sidebar-links" aria-label="Explore Student Wish"><a href="posts.html">Create post</a><a href="search.html">Explore posts</a><a href="complaint-box.html">Complain</a></nav>
+            </section>
+        </aside>
+    </main>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg><span>Home</span></a>
+            <a href="search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg><span>Search</span></a>
+            <a href="message%20page.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path><path d="m8 12 2.5 2.5L16 9"></path></svg><span>Messages</span></a>
+            <a href="complaint-box.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path><path d="M8 9h8M8 13h5"></path></svg><span>Complain</span></a>
+            <a href="posts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>Post</span></a>
+            <a href="profile.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg><span>Profile</span></a>
+        </div>
+    </nav>
+    <script>
+        const currentUser = localStorage.getItem("studentWishUsername") || "Student";
+        const databaseNames = ["student-wish-profile", "student-wish-admin-profile"];
+        const postFeed = document.getElementById("post-feed");
+        const feedStatus = document.getElementById("feed-status");
+        const stories = document.getElementById("stories");
+        const openDatabases = [];
+        let posts = [];
+        let postImageUrls = [];
+        document.getElementById("profile-name").textContent = currentUser;
+        document.getElementById("profile-avatar").textContent = currentUser.charAt(0).toUpperCase();
+
+        function openPostDatabase(name) {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) return reject(new Error("Post storage is not available in this browser."));
+                const request = indexedDB.open(name, 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("posts")) request.result.createObjectStore("posts", { keyPath: "id" });
+                };
+                request.onsuccess = function () { resolve(request.result); };
+                request.onerror = function () { reject(request.error || new Error("Could not open post storage.")); };
+            });
+        }
+
+        function loadPosts(database) {
+            return new Promise(function (resolve, reject) {
+                const transaction = database.transaction("posts", "readonly");
+                const request = transaction.objectStore("posts").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result.map(function (post) { return Object.assign({ databaseName: database.name }, post); }));
+                };
+                request.onerror = function () { reject(request.error || new Error("Could not load posts.")); };
+                transaction.onabort = function () { reject(transaction.error || new Error("Could not load posts.")); };
+            });
+        }
+
+        function savePost(post) {
+            const database = openDatabases.find(function (item) { return item.name === post.databaseName; });
+            if (!database) return Promise.reject(new Error("Post storage is not available."));
+            return new Promise(function (resolve, reject) {
+                const storedPost = Object.assign({}, post);
+                delete storedPost.databaseName;
+                const transaction = database.transaction("posts", "readwrite");
+                transaction.objectStore("posts").put(storedPost);
+                transaction.oncomplete = resolve;
+                transaction.onerror = function () { reject(transaction.error || new Error("Could not save your change.")); };
+                transaction.onabort = function () { reject(transaction.error || new Error("Could not save your change.")); };
+            });
+        }
+
+        function formatPostTime(timestamp) {
+            if (!timestamp || !Number.isFinite(Number(timestamp))) return "Recently";
+            const elapsed = Math.max(0, Math.floor((Date.now() - Number(timestamp)) / 1000));
+            const units = [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]];
+            for (const unit of units) {
+                const count = Math.floor(elapsed / unit[1]);
+                if (count >= 1) return count + " " + unit[0] + (count === 1 ? "" : "s") + " ago";
+            }
+            return "Just now";
+        }
+
+        function renderStories(feedPosts) {
+            stories.replaceChildren();
+            const ownStory = document.createElement("a");
+            ownStory.className = "story";
+            ownStory.href = "posts.html";
+            ownStory.setAttribute("aria-label", "Create a post");
+            ownStory.innerHTML = '<span class="story-ring"><span class="story-avatar" aria-hidden="true">+</span></span><span class="story-name">Your story</span>';
+            stories.append(ownStory);
+            const authors = [];
+            feedPosts.forEach(function (post) {
+                const name = post.author || (post.databaseName === "student-wish-admin-profile" ? "Admin" : currentUser);
+                if (name.toLocaleLowerCase() !== currentUser.toLocaleLowerCase() &&
+                    !authors.some(function (entry) { return entry.name.toLocaleLowerCase() === name.toLocaleLowerCase(); })) {
+                    authors.push({ name: name, postId: post.id, databaseName: post.databaseName });
+                }
+            });
+            authors.slice(0, 10).forEach(function (entry) {
+                const story = document.createElement("button");
+                story.className = "story";
+                story.type = "button";
+                story.dataset.postId = entry.postId;
+                story.dataset.databaseName = entry.databaseName;
+                story.setAttribute("aria-label", "View " + entry.name + "'s latest post");
+                const ring = document.createElement("span");
+                ring.className = "story-ring";
+                const avatar = document.createElement("span");
+                avatar.className = "story-avatar";
+                avatar.setAttribute("aria-hidden", "true");
+                avatar.textContent = entry.name.charAt(0).toUpperCase();
+                ring.append(avatar);
+                const name = document.createElement("span");
+                name.className = "story-name";
+                name.textContent = entry.name;
+                story.append(ring, name);
+                stories.append(story);
+            });
+        }
+
+        function createPostCard(post) {
+            const authorName = post.author || (post.databaseName === "student-wish-admin-profile" ? "Admin" : currentUser);
+            const comments = Array.isArray(post.comments) ? post.comments : [];
+            const likes = Array.isArray(post.likes) ? post.likes : [];
+            const card = document.createElement("article");
+            card.className = "post-card";
+            card.id = "post-" + encodeURIComponent(post.databaseName) + "-" + encodeURIComponent(post.id);
+            const header = document.createElement("header");
+            header.className = "post-header";
+            const avatar = document.createElement("span");
+            avatar.className = "post-avatar";
+            avatar.setAttribute("aria-hidden", "true");
+            avatar.textContent = authorName.charAt(0).toUpperCase();
+            const details = document.createElement("div");
+            details.className = "post-author-details";
+            const author = document.createElement("div");
+            author.className = "post-author";
+            author.textContent = authorName;
+            const meta = document.createElement("div");
+            meta.className = "post-meta";
+            meta.textContent = [post.department, formatPostTime(post.createdAt)].filter(Boolean).join(" · ");
+            details.append(author, meta);
+            const menu = document.createElement("span");
+            menu.className = "post-menu";
+            menu.setAttribute("aria-hidden", "true");
+            menu.textContent = "···";
+            header.append(avatar, details, menu);
+            card.append(header);
+            if (post.photo instanceof Blob) {
+                const image = document.createElement("img");
+                const url = URL.createObjectURL(post.photo);
+                postImageUrls.push(url);
+                image.className = "post-photo";
+                image.src = url;
+                image.alt = post.caption ? "Photo shared by " + authorName + ": " + post.caption : "Photo shared by " + authorName;
+                card.append(image);
+            } else if (post.caption) {
+                const text = document.createElement("div");
+                text.className = "post-text-card";
+                text.textContent = post.caption;
+                card.append(text);
+            }
+            const actions = document.createElement("div");
+            actions.className = "post-actions";
+            const like = document.createElement("button");
+            like.className = "post-action like-button";
+            like.type = "button";
+            like.dataset.postId = post.id;
+            like.dataset.databaseName = post.databaseName;
+            like.setAttribute("aria-pressed", String(likes.includes(currentUser)));
+            like.setAttribute("aria-label", likes.includes(currentUser) ? "Unlike post" : "Like post");
+            like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.3-8.8 11-8.8 11s-8.8-5.7-8.8-11a4.7 4.7 0 0 1 8.8-2.3 4.7 4.7 0 0 1 8.8 2.3Z"></path></svg><span class="visually-hidden">Like</span>';
+            const commentIcon = document.createElement("button");
+            commentIcon.className = "post-action comments-toggle";
+            commentIcon.type = "button";
+            commentIcon.dataset.postId = post.id;
+            commentIcon.dataset.databaseName = post.databaseName;
+            commentIcon.setAttribute("aria-label", "Show comments");
+            commentIcon.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path></svg><span class="visually-hidden">Comment</span>';
+            actions.append(like, commentIcon);
+            card.append(actions);
+            const likeCount = document.createElement("p");
+            likeCount.className = "like-count";
+            likeCount.textContent = likes.length ? likes.length + (likes.length === 1 ? " like" : " likes") : "Be the first to like this";
+            card.append(likeCount);
+            if (post.caption && post.photo) {
+                const caption = document.createElement("p");
+                caption.className = "post-caption";
+                const captionAuthor = document.createElement("span");
+                captionAuthor.className = "caption-author";
+                captionAuthor.textContent = authorName;
+                const text = document.createElement("span");
+                text.textContent = post.caption;
+                caption.append(captionAuthor, text);
+                card.append(caption);
+            }
+            const toggle = document.createElement("button");
+            toggle.className = "comments-toggle";
+            toggle.type = "button";
+            toggle.dataset.postId = post.id;
+            toggle.dataset.databaseName = post.databaseName;
+            toggle.textContent = comments.length ? "View all " + comments.length + " comments" : "Add a comment";
+            card.append(toggle);
+            const section = document.createElement("section");
+            section.className = "comments-section";
+            section.hidden = true;
+            const list = document.createElement("ul");
+            list.className = "comment-list";
+            comments.forEach(function (comment) {
+                const item = document.createElement("li");
+                item.className = "comment";
+                const name = document.createElement("span");
+                name.className = "comment-author";
+                name.textContent = comment.author || "Student";
+                const text = document.createElement("span");
+                text.textContent = comment.text || "";
+                item.append(name, text);
+                list.append(item);
+            });
+            const form = document.createElement("form");
+            form.className = "comment-form";
+            form.dataset.postId = post.id;
+            form.dataset.databaseName = post.databaseName;
+            const input = document.createElement("input");
+            input.className = "comment-input";
+            input.name = "comment";
+            input.maxLength = 300;
+            input.placeholder = "Add a comment...";
+            input.setAttribute("aria-label", "Write a comment");
+            input.required = true;
+            const submit = document.createElement("button");
+            submit.className = "comment-submit";
+            submit.type = "submit";
+            submit.textContent = "Post";
+            form.append(input, submit);
+            section.append(list, form);
+            card.append(section);
+            return card;
+        }
+
+        function renderPosts(items) {
+            postImageUrls.forEach(URL.revokeObjectURL);
+            postImageUrls = [];
+            posts = items.slice().sort(function (a, b) { return Number(b.createdAt) - Number(a.createdAt); });
+            renderStories(posts);
+            postFeed.replaceChildren();
+            if (!posts.length) {
+                const empty = document.createElement("p");
+                empty.className = "empty-feed";
+                empty.innerHTML = 'Nothing here yet. Share the first moment with your community. <a href="posts.html">Create a post</a>';
+                postFeed.append(empty);
+                return;
+            }
+            posts.forEach(function (post) { postFeed.append(createPostCard(post)); });
+        }
+
+        function refreshPosts() {
+            return Promise.all(openDatabases.map(loadPosts)).then(function (items) {
+                renderPosts(items.reduce(function (all, group) { return all.concat(group); }, []));
+            });
+        }
+
+        function updatePostById(id, databaseName, update) {
+            const post = posts.find(function (item) { return item.id === id && item.databaseName === databaseName; });
+            if (!post) return Promise.reject(new Error("This post could not be found."));
+            update(post);
+            return savePost(post);
+        }
+
+        stories.addEventListener("click", function (event) {
+            const story = event.target.closest("button.story");
+            if (!story) return;
+            const card = document.getElementById("post-" + encodeURIComponent(story.dataset.databaseName) + "-" + encodeURIComponent(story.dataset.postId));
+            if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        postFeed.addEventListener("click", function (event) {
+            const button = event.target.closest("button");
+            if (!button) return;
+            if (button.classList.contains("comments-toggle")) {
+                const section = button.closest(".post-card").querySelector(".comments-section");
+                section.hidden = !section.hidden;
+                if (!section.hidden) section.querySelector(".comment-input").focus();
+                return;
+            }
+            if (!button.classList.contains("like-button")) return;
+            button.disabled = true;
+            updatePostById(button.dataset.postId, button.dataset.databaseName, function (post) {
+                post.likes = Array.isArray(post.likes) ? post.likes : [];
+                const index = post.likes.indexOf(currentUser);
+                if (index >= 0) post.likes.splice(index, 1);
+                else post.likes.push(currentUser);
+            }).then(refreshPosts).catch(function (error) {
+                feedStatus.textContent = error.message;
+                button.disabled = false;
+            });
+        });
+        postFeed.addEventListener("submit", function (event) {
+            if (!event.target.matches(".comment-form")) return;
+            event.preventDefault();
+            const form = event.target;
+            const input = form.elements.comment;
+            const text = input.value.trim();
+            if (!text) return;
+            const submit = form.querySelector("button[type='submit']");
+            submit.disabled = true;
+            updatePostById(form.dataset.postId, form.dataset.databaseName, function (post) {
+                post.comments = Array.isArray(post.comments) ? post.comments : [];
+                post.comments.push({ author: currentUser, text: text, createdAt: Date.now() });
+            }).then(refreshPosts).catch(function (error) {
+                feedStatus.textContent = error.message;
+                submit.disabled = false;
+            });
+        });
+        Promise.all(databaseNames.map(openPostDatabase)).then(function (databases) {
+            openDatabases.push.apply(openDatabases, databases);
+            return refreshPosts();
+        }).catch(function (error) { feedStatus.textContent = error.message; });
+        window.addEventListener("beforeunload", function () {
+            postImageUrls.forEach(URL.revokeObjectURL);
+            openDatabases.forEach(function (database) { database.close(); });
+        });
+    </script>
+</body>
+</html>

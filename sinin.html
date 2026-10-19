@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sign In - Student Wish</title>
+    <style>
+        body {
+            display: grid;
+            min-height: 100vh;
+            margin: 0;
+            place-items: center;
+            background-color: rgb(74, 71, 71);
+            color: rgb(150, 66, 202);
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: min(100% - 32px, 420px);
+            padding: 32px;
+            box-sizing: border-box;
+            border: 1px solid rgb(180, 22, 133);
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #888;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background-color: rgb(110, 22, 128);
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-link,
+        .form-note {
+            display: block;
+            margin-top: 18px;
+            color: #655c53;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Student Sign In</h1>
+        <form id="student-login-form">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button type="submit">Sign In</button>
+        </form>
+        <p class="form-note">This demo does not verify passwords. Your password is not saved.</p>
+        <a class="back-link" href="login.html">Back to login options</a>
+    </main>
+    <script>
+        document.getElementById("student-login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            if (!username) {
+                return;
+            }
+            localStorage.setItem("studentWishUsername", username);
+            window.location.href = "profile.html";
+        });
+    </script>
+</body>
+</html>

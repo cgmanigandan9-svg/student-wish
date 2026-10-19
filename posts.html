@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f4f0">
+    <title>Posts - Student Wish</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+            color: #28251f;
+            background: #f7f4f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 84px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e4ded6;
+        }
+
+        .brand {
+            color: #28251f;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .create-link {
+            padding: 9px 14px;
+            border-radius: 7px;
+            background: #754b66;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        main {
+            width: min(100% - 32px, 620px);
+            margin: 28px auto;
+        }
+
+        .feed-heading {
+            margin: 0 0 18px;
+            font-family: Georgia, serif;
+            font-size: 26px;
+        }
+
+        .feed {
+            display: grid;
+            gap: 22px;
+        }
+
+        .feed-post {
+            overflow: hidden;
+            border: 1px solid #e4ded6;
+            border-radius: 10px;
+            background: #fffdfa;
+            box-shadow: 0 3px 12px #422a270c;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .avatar {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            flex: 0 0 auto;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f5c784, #d78263 55%, #754b66);
+            color: white;
+            font-family: Georgia, serif;
+        }
+
+        .post-photo {
+            display: block;
+            width: 100%;
+            max-height: 680px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: #211d20;
+        }
+
+        .post-text {
+            margin: 0;
+            padding: 14px 15px 4px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 15px 0;
+        }
+
+        .like-button,
+        .comments-toggle {
+            padding: 4px 0;
+            border: 0;
+            background: none;
+            color: #754b66;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .like-button[aria-pressed="true"] {
+            color: #bd344c;
+        }
+
+        .like-count {
+            margin: 5px 15px 0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .comments-section {
+            padding: 8px 15px 15px;
+        }
+
+        .comments-content[hidden] {
+            display: none;
+        }
+
+        .comment-list {
+            display: grid;
+            gap: 7px;
+            margin: 10px 0 12px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .comment {
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-author {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            min-width: 0;
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            font: inherit;
+            font-size: 14px;
+        }
+
+        .comment-button {
+            padding: 0 13px;
+            border: 0;
+            border-radius: 7px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .empty-feed,
+        .feed-status {
+            color: #655c53;
+            line-height: 1.5;
+        }
+
+        .empty-feed {
+            padding: 38px 22px;
+            border: 1px solid #e4ded6;
+            border-radius: 10px;
+            background: #fffdfa;
+            text-align: center;
+        }
+
+        .feed-status {
+            min-height: 1.4em;
+            font-size: 14px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            z-index: 10;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+            border-top: 1px solid #e4ded6;
+            background: #fffdfa;
+        }
+
+        .bottom-nav-inner {
+            display: grid;
+            width: min(100%, 560px);
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            min-height: 48px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 8px;
+            color: #655c53;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .bottom-nav a[aria-current="page"] {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bottom-nav svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        @media (max-width: 560px) {
+            .topbar {
+                padding: 16px;
+            }
+
+            main {
+                margin: 18px auto;
+            }
+
+            .feed {
+                gap: 14px;
+            }
+
+            .feed-post {
+                border-right: 0;
+                border-left: 0;
+                border-radius: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+        <a class="create-link" href="profile.html#composer-heading">Create post</a>
+    </header>
+    <main>
+        <h1 class="feed-heading">Posts</h1>
+        <p class="feed-status" id="feed-status" role="status" aria-live="polite"></p>
+        <section class="feed" id="post-feed" aria-label="Posts"></section>
+    </main>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg>
+                <span>Home</span>
+            </a>
+            <a href="search.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+                <span>Search</span>
+            </a>
+            <a href="message%20page.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path><path d="m8 12 2.5 2.5L16 9"></path></svg>
+                <span>Messages</span>
+            </a>
+            <a href="complaint-box.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path><path d="M8 9h8M8 13h5"></path></svg>
+                <span>Complain</span>
+            </a>
+            <a href="posts.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                <span>Post</span>
+            </a>
+            <a href="profile.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    <script>
+        const currentUser = localStorage.getItem("studentWishUsername") || "Student";
+        const postFeed = document.getElementById("post-feed");
+        const feedStatus = document.getElementById("feed-status");
+        const feedDatabaseName = "student-wish-profile";
+        let postDatabase;
+        let postImageUrls = [];
+
+        function openPostDatabase() {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Post storage is not available in this browser."));
+                    return;
+                }
+
+                const request = window.indexedDB.open(feedDatabaseName, 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("posts")) {
+                        request.result.createObjectStore("posts", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open post storage."));
+                };
+            });
+        }
+
+        function loadPosts() {
+            return new Promise(function (resolve, reject) {
+                const transaction = postDatabase.transaction("posts", "readonly");
+                const request = transaction.objectStore("posts").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not load posts."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not load posts."));
+                };
+            });
+        }
+
+        function updatePost(post) {
+            return new Promise(function (resolve, reject) {
+                const transaction = postDatabase.transaction("posts", "readwrite");
+                transaction.objectStore("posts").put(post);
+                transaction.oncomplete = function () {
+                    resolve();
+                };
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not save your reaction."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not save your reaction."));
+                };
+            });
+        }
+
+        function renderPosts(posts) {
+            postImageUrls.forEach(URL.revokeObjectURL);
+            postImageUrls = [];
+            postFeed.replaceChildren();
+            posts.sort(function (first, second) {
+                return second.createdAt - first.createdAt;
+            });
+
+            if (posts.length === 0) {
+                const empty = document.createElement("p");
+                empty.className = "empty-feed";
+                empty.textContent = "There are no posts yet. Share the first one from your profile.";
+                postFeed.append(empty);
+                return;
+            }
+
+            posts.forEach(function (post) {
+                const card = document.createElement("article");
+                card.className = "feed-post";
+
+                const author = document.createElement("header");
+                author.className = "post-author";
+                const postAuthor = post.author || currentUser;
+                const avatar = document.createElement("span");
+                avatar.className = "avatar";
+                avatar.setAttribute("aria-hidden", "true");
+                avatar.textContent = postAuthor.charAt(0).toUpperCase();
+                const authorName = document.createElement("span");
+                authorName.textContent = postAuthor;
+                author.append(avatar, authorName);
+                card.append(author);
+
+                if (post.photo) {
+                    const image = document.createElement("img");
+                    const imageUrl = URL.createObjectURL(post.photo);
+                    postImageUrls.push(imageUrl);
+                    image.className = "post-photo";
+                    image.src = imageUrl;
+                    image.alt = post.caption ? "Post photo: " + post.caption : "Shared post photo";
+                    card.append(image);
+                }
+
+                if (post.caption) {
+                    const caption = document.createElement("p");
+                    caption.className = "post-caption";
+                    caption.textContent = post.caption;
+                    card.append(caption);
+                }
+
+                const likes = Array.isArray(post.likes) ? post.likes : [];
+                const liked = likes.includes(currentUser);
+                const actions = document.createElement("div");
+                actions.className = "post-actions";
+                const likeButton = document.createElement("button");
+                likeButton.className = "like-button";
+                likeButton.type = "button";
+                likeButton.dataset.postId = post.id;
+                likeButton.setAttribute("aria-pressed", String(liked));
+                likeButton.textContent = liked ? "♥ Liked" : "♡ Like";
+                const commentCount = (post.comments || []).length;
+                const commentsButton = document.createElement("button");
+                commentsButton.className = "comments-toggle";
+                commentsButton.type = "button";
+                commentsButton.dataset.postId = post.id;
+                commentsButton.dataset.commentCount = String(commentCount);
+                commentsButton.textContent = commentCount
+                    ? "Comments (" + commentCount + ")"
+                    : "Comment";
+                actions.append(likeButton, commentsButton);
+                card.append(actions);
+
+                const likeCount = document.createElement("p");
+                likeCount.className = "like-count";
+                likeCount.textContent = likes.length
+                    ? likes.length + (likes.length === 1 ? " like" : " likes")
+                    : "Be the first to like this";
+                card.append(likeCount);
+
+                const commentsSection = document.createElement("section");
+                commentsSection.className = "comments-section";
+                commentsSection.dataset.postId = post.id;
+                commentsSection.hidden = true;
+                const commentList = document.createElement("ul");
+                commentList.className = "comment-list";
+                (post.comments || []).forEach(function (comment) {
+                    const item = document.createElement("li");
+                    item.className = "comment";
+                    const commentAuthor = document.createElement("span");
+                    commentAuthor.className = "comment-author";
+                    commentAuthor.textContent = comment.author;
+                    const commentText = document.createElement("span");
+                    commentText.textContent = comment.text;
+                    item.append(commentAuthor, commentText);
+                    commentList.append(item);
+                });
+
+                const form = document.createElement("form");
+                form.className = "comment-form";
+                form.dataset.postId = post.id;
+                const input = document.createElement("input");
+                input.className = "comment-input";
+                input.name = "comment";
+                input.maxLength = 300;
+                input.placeholder = "Add a comment...";
+                input.setAttribute("aria-label", "Write a comment");
+                input.required = true;
+                const submit = document.createElement("button");
+                submit.className = "comment-button";
+                submit.type = "submit";
+                submit.textContent = "Post";
+                form.append(input, submit);
+                commentsSection.append(commentList, form);
+                card.append(commentsSection);
+                postFeed.append(card);
+            });
+        }
+
+        function refreshPosts() {
+            return loadPosts().then(renderPosts);
+        }
+
+        function updatePostById(postId, update) {
+            return loadPosts().then(function (posts) {
+                const post = posts.find(function (item) {
+                    return item.id === postId;
+                });
+                if (!post) {
+                    throw new Error("This post could not be found.");
+                }
+                update(post);
+                return updatePost(post);
+            });
+        }
+
+        postFeed.addEventListener("click", function (event) {
+            const likeButton = event.target.closest(".like-button");
+            const commentsButton = event.target.closest(".comments-toggle");
+            if (!likeButton && !commentsButton) {
+                return;
+            }
+
+            const button = likeButton || commentsButton;
+            const card = button.closest(".feed-post");
+            button.disabled = true;
+            if (commentsButton) {
+                const commentsSection = card.querySelector(".comments-section");
+                commentsSection.hidden = !commentsSection.hidden;
+                button.textContent = commentsSection.hidden
+                    ? (Number(button.dataset.commentCount) ? "Comments (" + button.dataset.commentCount + ")" : "Comment")
+                    : "Hide comments";
+                button.disabled = false;
+                return;
+            }
+
+            updatePostById(button.dataset.postId, function (post) {
+                post.likes = Array.isArray(post.likes) ? post.likes : [];
+                const index = post.likes.indexOf(currentUser);
+                if (index >= 0) {
+                    post.likes.splice(index, 1);
+                } else {
+                    post.likes.push(currentUser);
+                }
+            })
+                .then(refreshPosts)
+                .catch(function (error) {
+                    feedStatus.textContent = error.message;
+                });
+        });
+
+        postFeed.addEventListener("submit", function (event) {
+            if (!event.target.matches(".comment-form")) {
+                return;
+            }
+            event.preventDefault();
+            const form = event.target;
+            const input = form.elements.comment;
+            const text = input.value.trim();
+            if (!text) {
+                return;
+            }
+
+            const submit = form.querySelector("button[type='submit']");
+            submit.disabled = true;
+            updatePostById(form.dataset.postId, function (post) {
+                post.comments = Array.isArray(post.comments) ? post.comments : [];
+                post.comments.push({
+                    author: currentUser,
+                    text: text,
+                    createdAt: Date.now()
+                });
+            })
+                .then(refreshPosts)
+                .catch(function (error) {
+                    feedStatus.textContent = error.message;
+                });
+        });
+
+        openPostDatabase()
+            .then(function (database) {
+                postDatabase = database;
+                return refreshPosts();
+            })
+            .catch(function (error) {
+                feedStatus.textContent = error.message;
+            });
+    </script>
+</body>
+</html>

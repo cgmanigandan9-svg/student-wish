@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f4f0">
+    <title>Admin Profile - Student Wish</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+            color: #28251f;
+            background: #f7f4f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding-bottom: 84px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e4ded6;
+        }
+
+        .brand {
+            color: inherit;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .account-menu {
+            position: relative;
+        }
+
+        .account-menu summary {
+            padding: 9px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            color: #655c53;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .account-options {
+            position: absolute;
+            z-index: 2;
+            top: calc(100% + 8px);
+            right: 0;
+            display: grid;
+            min-width: 180px;
+            padding: 6px;
+            border: 1px solid #e4ded6;
+            border-radius: 9px;
+            background: #fffdfa;
+        }
+
+        .account-options a,
+        .account-options button {
+            padding: 10px 12px;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        main {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 48px 24px 64px;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 36px;
+            align-items: center;
+            margin-bottom: 44px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 132px;
+            height: 132px;
+            place-items: center;
+            border: 5px solid white;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f5c784, #d78263 55%, #754b66);
+            color: white;
+            font: 46px Georgia, serif;
+        }
+
+        .profile-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .profile-actions h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 400;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-action-button,
+        .settings-button {
+            min-height: 36px;
+            padding: 8px 12px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            background: #fffdfa;
+            color: inherit;
+            font: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .settings-button {
+            width: 38px;
+            padding: 7px;
+            font-size: 18px;
+        }
+
+        .post-count,
+        .department-name {
+            margin: 0 0 12px;
+            color: #514b44;
+        }
+
+        .department-name {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bio,
+        .composer-hint {
+            margin: 0;
+            color: #655c53;
+            line-height: 1.6;
+        }
+
+        .composer {
+            margin-bottom: 40px;
+            padding: 22px;
+            border: 1px solid #e4ded6;
+            border-radius: 10px;
+            background: #fffdfa;
+        }
+
+        .composer h2 {
+            margin: 0 0 8px;
+            font: 500 21px Georgia, serif;
+        }
+
+        .composer-hint {
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .composer label {
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .composer textarea,
+        .composer input[type="file"] {
+            width: 100%;
+            color: inherit;
+            font: inherit;
+        }
+
+        .composer textarea {
+            min-height: 90px;
+            padding: 12px;
+            resize: vertical;
+            border: 1px solid #d8d0c7;
+            border-radius: 6px;
+        }
+
+        .publish-button {
+            margin-top: 14px;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 6px;
+            background: #754b66;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .post-status {
+            min-height: 1.4em;
+            margin: 12px 0 0;
+            color: #655c53;
+        }
+
+        .section-heading {
+            color: #655c53;
+            font-size: 12px;
+            letter-spacing: .16em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .user-post {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid #e4ded6;
+            border-radius: 8px;
+            background: #fffdfa;
+        }
+
+        .post-photo {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .post-caption {
+            margin: 0;
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .empty-posts {
+            grid-column: 1 / -1;
+            padding: 28px 12px;
+            color: #655c53;
+            text-align: center;
+        }
+
+        .complaint-section {
+            margin-bottom: 40px;
+        }
+
+        .complaint-list {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .complaint-card {
+            padding: 16px;
+            border: 1px solid #e4ded6;
+            border-radius: 10px;
+            background: #fffdfa;
+            overflow-wrap: anywhere;
+        }
+
+        .complaint-card-department {
+            margin: 0 0 8px;
+            color: #754b66;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .complaint-card-text {
+            margin: 0;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .complaint-card-media {
+            display: block;
+            width: min(100%, 520px);
+            max-height: 440px;
+            margin-top: 10px;
+            border-radius: 8px;
+            background: #211d20;
+            object-fit: contain;
+        }
+
+        .complaint-status {
+            min-height: 1.4em;
+            color: #655c53;
+            font-size: 14px;
+        }
+
+        .profile-dialog {
+            width: min(440px, calc(100% - 32px));
+            max-width: none;
+            padding: 20px;
+            border: 1px solid #e4ded6;
+            border-radius: 12px;
+            background: #fffdfa;
+            color: #28251f;
+        }
+
+        .profile-dialog::backdrop {
+            background: #171411b8;
+        }
+
+        .dialog-header,
+        .dialog-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .dialog-header h2 {
+            font: 500 22px Georgia, serif;
+        }
+
+        .dialog-content label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .dialog-content textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 11px;
+            border: 1px solid #d8d0c7;
+            border-radius: 7px;
+            font: inherit;
+        }
+
+        .dialog-actions {
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .dialog-actions button,
+        .dialog-close {
+            padding: 9px 14px;
+            border: 0;
+            border-radius: 7px;
+            background: #f0ebe4;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .dialog-actions button[type="submit"] {
+            background: #754b66;
+            color: white;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            z-index: 10;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+            border-top: 1px solid #e4ded6;
+            background: #fffdfa;
+        }
+
+        .bottom-nav-inner {
+            display: grid;
+            width: min(100%, 560px);
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            min-height: 48px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 8px;
+            color: #655c53;
+            font-size: 10px;
+            text-decoration: none;
+        }
+
+        .bottom-nav a[aria-current="page"] {
+            color: #754b66;
+            font-weight: bold;
+        }
+
+        .bottom-nav svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.8;
+        }
+
+        body[data-theme="dark"] {
+            background: #171411;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .topbar,
+        body[data-theme="dark"] .bottom-nav,
+        body[data-theme="dark"] .composer,
+        body[data-theme="dark"] .user-post,
+        body[data-theme="dark"] .complaint-card,
+        body[data-theme="dark"] .profile-dialog,
+        body[data-theme="dark"] .account-options {
+            border-color: #413a3d;
+            background: #211d20;
+            color: #f2ede7;
+        }
+
+        body[data-theme="dark"] .brand,
+        body[data-theme="dark"] .bio,
+        body[data-theme="dark"] .post-count,
+        body[data-theme="dark"] .composer-hint,
+        body[data-theme="dark"] .post-caption,
+        body[data-theme="dark"] .complaint-status {
+            color: #c3bab2;
+        }
+
+        body[data-theme="dark"] .profile-action-button,
+        body[data-theme="dark"] .settings-button,
+        body[data-theme="dark"] .composer textarea,
+        body[data-theme="dark"] .dialog-content textarea {
+            border-color: #51494c;
+            background: #171411;
+            color: #f2ede7;
+        }
+
+        @media (max-width: 620px) {
+            .topbar {
+                padding: 16px;
+            }
+
+            main {
+                padding: 32px 16px 48px;
+            }
+
+            .profile-header {
+                grid-template-columns: 90px 1fr;
+                gap: 18px;
+                margin-bottom: 32px;
+            }
+
+            .avatar {
+                width: 84px;
+                height: 84px;
+                font-size: 32px;
+            }
+
+            .profile-actions {
+                flex-wrap: wrap;
+                gap: 7px;
+                margin-bottom: 12px;
+            }
+
+            .profile-actions h1 {
+                font-size: 20px;
+            }
+
+            .profile-action-button {
+                padding: 7px 9px;
+                font-size: 12px;
+            }
+
+            .post-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .composer {
+                padding: 16px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+<body>
+    <header class="topbar">
+        <a class="brand" href="home%20page.html">Student Wish</a>
+        <details class="account-menu" id="account-menu">
+            <summary>Admin account</summary>
+            <nav class="account-options" aria-label="Account options">
+                <a href="admin-login.html">Switch admin account</a>
+                <button id="logout-button" type="button">Logout</button>
+            </nav>
+        </details>
+    </header>
+    <main>
+        <section class="profile-header" aria-labelledby="profile-name">
+            <div class="avatar" id="avatar" aria-hidden="true">A</div>
+            <div class="profile-info">
+                <div class="profile-actions">
+                    <h1 id="profile-name"></h1>
+                    <button class="profile-action-button" id="edit-profile-button" type="button">Edit profile</button>
+                    <button class="settings-button" id="open-settings-button" type="button" aria-label="Settings" title="Settings">⚙</button>
+                </div>
+                <p class="post-count"><strong id="post-count">0</strong> posts</p>
+                <p class="department-name" id="department-name"></p>
+                <p class="bio" id="profile-bio"></p>
+            </div>
+        </section>
+        <section class="composer" id="profile-composer" aria-labelledby="composer-heading">
+            <h2 id="composer-heading">Share a post</h2>
+            <p class="composer-hint">Share an update with the Student Wish community.</p>
+            <form id="post-form">
+                <label for="post-caption">Caption</label>
+                <textarea id="post-caption" maxlength="500" placeholder="What would you like to share?"></textarea>
+                <label for="post-photo">Add a photo (optional, up to 5 MB)</label>
+                <input id="post-photo" type="file" accept="image/*">
+                <button class="publish-button" id="publish-button" type="submit">Share post</button>
+            </form>
+            <p class="post-status" id="post-status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="complaint-section" id="profile-complaints" aria-labelledby="complaints-heading">
+            <h2 class="section-heading" id="complaints-heading">Complaints for your department</h2>
+            <p class="complaint-status" id="complaint-status" role="status" aria-live="polite">Loading department complaints...</p>
+            <ul class="complaint-list" id="department-complaints" aria-live="polite"></ul>
+        </section>
+        <section aria-labelledby="posts-heading">
+            <h2 class="section-heading" id="posts-heading">Posts</h2>
+            <div class="post-grid" id="post-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <dialog class="profile-dialog" id="bio-dialog" aria-labelledby="bio-title">
+        <form class="dialog-content" id="bio-form">
+            <header class="dialog-header">
+                <h2 id="bio-title">Edit profile bio</h2>
+                <button class="dialog-close" id="bio-close" type="button" aria-label="Close bio editor">&times;</button>
+            </header>
+            <label for="bio-input">Bio</label>
+            <textarea id="bio-input" maxlength="150" placeholder="Write something about yourself..."></textarea>
+            <div class="dialog-actions">
+                <button id="bio-cancel" type="button">Cancel</button>
+                <button type="submit">Save bio</button>
+            </div>
+        </form>
+    </dialog>
+    <dialog class="profile-dialog" id="settings-dialog" aria-labelledby="settings-title">
+        <section class="dialog-content">
+            <header class="dialog-header">
+                <h2 id="settings-title">Settings</h2>
+                <button class="dialog-close" id="settings-close" type="button" aria-label="Close settings">&times;</button>
+            </header>
+            <button id="settings-edit-bio" type="button">Edit profile bio</button>
+            <label class="settings-option" for="dark-mode-toggle">
+                <span>Dark mode</span>
+                <input id="dark-mode-toggle" type="checkbox">
+            </label>
+        </section>
+    </dialog>
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <div class="bottom-nav-inner">
+            <a href="home%20page.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"></path></svg><span>Home</span></a>
+            <a href="search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg><span>Search</span></a>
+            <a href="message%20page.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"></path></svg><span>Messages</span></a>
+            <a href="complaint-box.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H9l-5 4z"></path></svg><span>Complain</span></a>
+            <a href="posts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>Post</span></a>
+            <a href="admin%20profile.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg><span>Profile</span></a>
+        </div>
+    </nav>
+    <script>
+        const activeUsername = localStorage.getItem("studentWishAdminUsername");
+        const activeDepartment = localStorage.getItem("studentWishAdminDepartment");
+        const requestedAdmin = new URLSearchParams(window.location.search).get("admin");
+        const isReadOnlyProfile = requestedAdmin !== null;
+        let directoryAdmin = null;
+        let directoryError = "";
+        if (isReadOnlyProfile) {
+            try {
+                const directory = JSON.parse(localStorage.getItem("studentWishAdminDirectory") || "[]");
+                if (!Array.isArray(directory)) {
+                    throw new Error("The saved admin directory is invalid.");
+                }
+                directoryAdmin = directory.find(function (admin) {
+                    return admin && typeof admin.username === "string" &&
+                        admin.username.toLocaleLowerCase() === requestedAdmin.toLocaleLowerCase();
+                }) || null;
+            } catch (error) {
+                directoryError = error.message;
+            }
+        }
+        const username = isReadOnlyProfile
+            ? (directoryAdmin ? directoryAdmin.username : "Admin profile")
+            : activeUsername;
+        const department = isReadOnlyProfile
+            ? (directoryAdmin ? directoryAdmin.department : "")
+            : activeDepartment;
+        const currentUsername = username || "Admin";
+        const bioKey = "studentWishAdminBio:" + currentUsername.toLocaleLowerCase();
+        const darkModeKey = "studentWishDarkMode";
+        const bioDialog = document.getElementById("bio-dialog");
+        const settingsDialog = document.getElementById("settings-dialog");
+        const bioInput = document.getElementById("bio-input");
+        const bioForm = document.getElementById("bio-form");
+        const profileBio = document.getElementById("profile-bio");
+        const postForm = document.getElementById("post-form");
+        const postGrid = document.getElementById("post-grid");
+        const postStatus = document.getElementById("post-status");
+        const publishButton = document.getElementById("publish-button");
+        const postCount = document.getElementById("post-count");
+        const complaintList = document.getElementById("department-complaints");
+        const complaintStatus = document.getElementById("complaint-status");
+        const photoLimit = 5 * 1024 * 1024;
+        let postDatabase;
+        let photoUrls = [];
+        let complaintDatabase;
+        let complaintMediaUrls = [];
+
+        if ((!username || !department) && !isReadOnlyProfile) {
+            window.location.replace("admin-login.html");
+        } else {
+            document.getElementById("profile-name").textContent = username;
+            document.getElementById("avatar").textContent = username.charAt(0).toLocaleUpperCase();
+            document.getElementById("department-name").textContent = department;
+        }
+
+        profileBio.textContent = localStorage.getItem(bioKey) || "Add a bio to tell people about yourself.";
+        if (isReadOnlyProfile) {
+            document.getElementById("account-menu").hidden = true;
+            document.getElementById("edit-profile-button").hidden = true;
+            document.getElementById("open-settings-button").hidden = true;
+            document.getElementById("profile-composer").hidden = true;
+            document.getElementById("profile-complaints").hidden = true;
+            if (!directoryAdmin) {
+                profileBio.textContent = directoryError
+                    ? "Could not load this admin profile: " + directoryError
+                    : "This admin profile is not available in this browser.";
+                postStatus.textContent = profileBio.textContent;
+            }
+        }
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        darkModeToggle.checked = localStorage.getItem(darkModeKey) === "true";
+        document.body.dataset.theme = darkModeToggle.checked ? "dark" : "light";
+
+        function openBioEditor() {
+            bioInput.value = localStorage.getItem(bioKey) || "";
+            bioDialog.showModal();
+            bioInput.focus();
+        }
+
+        document.getElementById("edit-profile-button").addEventListener("click", openBioEditor);
+        document.getElementById("settings-edit-bio").addEventListener("click", function () {
+            settingsDialog.close();
+            openBioEditor();
+        });
+        document.getElementById("open-settings-button").addEventListener("click", function () {
+            settingsDialog.showModal();
+        });
+        document.getElementById("settings-close").addEventListener("click", function () {
+            settingsDialog.close();
+        });
+        document.getElementById("bio-close").addEventListener("click", function () {
+            bioDialog.close();
+        });
+        document.getElementById("bio-cancel").addEventListener("click", function () {
+            bioDialog.close();
+        });
+        bioForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const bio = bioInput.value.trim();
+            try {
+                if (bio) {
+                    localStorage.setItem(bioKey, bio);
+                } else {
+                    localStorage.removeItem(bioKey);
+                }
+                profileBio.textContent = bio || "Add a bio to tell people about yourself.";
+                bioDialog.close();
+            } catch (error) {
+                postStatus.textContent = "Could not save your bio: " + error.message;
+            }
+        });
+        darkModeToggle.addEventListener("change", function () {
+            document.body.dataset.theme = darkModeToggle.checked ? "dark" : "light";
+            try {
+                localStorage.setItem(darkModeKey, String(darkModeToggle.checked));
+            } catch (error) {
+                postStatus.textContent = "Could not save appearance settings: " + error.message;
+            }
+        });
+        document.getElementById("logout-button").addEventListener("click", function () {
+            localStorage.removeItem("studentWishAdminUsername");
+            localStorage.removeItem("studentWishAdminDepartment");
+            window.location.href = "admin-login.html";
+        });
+
+        function openPostDatabase() {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Post storage is not available in this browser."));
+                    return;
+                }
+                const request = window.indexedDB.open("student-wish-admin-profile", 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("posts")) {
+                        request.result.createObjectStore("posts", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open admin post storage."));
+                };
+            });
+        }
+
+        function loadPosts() {
+            return new Promise(function (resolve, reject) {
+                const request = postDatabase.transaction("posts", "readonly").objectStore("posts").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not load admin posts."));
+                };
+            });
+        }
+
+        function savePost(post) {
+            return new Promise(function (resolve, reject) {
+                const transaction = postDatabase.transaction("posts", "readwrite");
+                transaction.objectStore("posts").add(post);
+                transaction.oncomplete = resolve;
+                transaction.onerror = function () {
+                    reject(transaction.error || new Error("Could not save the post."));
+                };
+                transaction.onabort = function () {
+                    reject(transaction.error || new Error("Could not save the post."));
+                };
+            });
+        }
+
+        function openComplaintDatabase() {
+            return new Promise(function (resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error("Complaint storage is not available in this browser."));
+                    return;
+                }
+                const request = window.indexedDB.open("student-wish-complaints", 1);
+                request.onupgradeneeded = function () {
+                    if (!request.result.objectStoreNames.contains("messages")) {
+                        request.result.createObjectStore("messages", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function () {
+                    resolve(request.result);
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not open complaint storage."));
+                };
+            });
+        }
+
+        function loadDepartmentComplaints() {
+            return new Promise(function (resolve, reject) {
+                const request = complaintDatabase.transaction("messages", "readonly")
+                    .objectStore("messages").getAll();
+                request.onsuccess = function () {
+                    resolve(request.result.filter(function (complaint) {
+                        return typeof complaint.department === "string" &&
+                            complaint.department.toLocaleLowerCase() === department.toLocaleLowerCase();
+                    }));
+                };
+                request.onerror = function () {
+                    reject(request.error || new Error("Could not load department complaints."));
+                };
+                request.transaction.onabort = function () {
+                    reject(request.transaction.error || new Error("Could not load department complaints."));
+                };
+            });
+        }
+
+        function renderDepartmentComplaints(complaints) {
+            complaintMediaUrls.forEach(URL.revokeObjectURL);
+            complaintMediaUrls = [];
+            complaintList.replaceChildren();
+            complaints.sort(function (first, second) {
+                return first.createdAt - second.createdAt;
+            });
+
+            if (complaints.length === 0) {
+                complaintStatus.textContent = "No complaints have been submitted for your department.";
+                return;
+            }
+            complaintStatus.textContent = complaints.length + " anonymous " +
+                (complaints.length === 1 ? "complaint" : "complaints") + " for " + department + ".";
+
+            complaints.forEach(function (complaint) {
+                const item = document.createElement("li");
+                item.className = "complaint-card";
+                const label = document.createElement("p");
+                label.className = "complaint-card-department";
+                label.textContent = "Anonymous complaint";
+                item.append(label);
+
+                if (complaint.text) {
+                    const text = document.createElement("p");
+                    text.className = "complaint-card-text";
+                    text.textContent = complaint.text;
+                    item.append(text);
+                }
+                if (complaint.attachment instanceof Blob) {
+                    const mediaUrl = URL.createObjectURL(complaint.attachment);
+                    complaintMediaUrls.push(mediaUrl);
+                    const media = document.createElement(
+                        complaint.attachmentType.startsWith("video/") ? "video" : "img"
+                    );
+                    media.className = "complaint-card-media";
+                    media.src = mediaUrl;
+                    if (media instanceof HTMLVideoElement) {
+                        media.controls = true;
+                        media.playsInline = true;
+                        media.preload = "metadata";
+                        media.setAttribute("aria-label", "Anonymous complaint video");
+                    } else {
+                        media.alt = "Anonymous complaint image";
+                    }
+                    item.append(media);
+                }
+                complaintList.append(item);
+            });
+        }
+
+        function renderPosts(posts) {
+            photoUrls.forEach(URL.revokeObjectURL);
+            photoUrls = [];
+            postGrid.replaceChildren();
+            posts = posts.filter(function (post) {
+                return typeof post.author === "string" &&
+                    post.author.toLocaleLowerCase() === currentUsername.toLocaleLowerCase();
+            });
+            posts.sort(function (first, second) {
+                return second.createdAt - first.createdAt;
+            });
+            postCount.textContent = String(posts.length);
+            if (!posts.length) {
+                const empty = document.createElement("p");
+                empty.className = "empty-posts";
+                empty.textContent = isReadOnlyProfile
+                    ? "This admin has not shared any posts yet."
+                    : "Your posts will appear here after you share them.";
+                postGrid.append(empty);
+                return;
+            }
+            posts.forEach(function (post) {
+                const card = document.createElement("article");
+                card.className = "user-post";
+                if (post.photo instanceof Blob) {
+                    const image = document.createElement("img");
+                    const photoUrl = URL.createObjectURL(post.photo);
+                    photoUrls.push(photoUrl);
+                    image.className = "post-photo";
+                    image.src = photoUrl;
+                    image.alt = post.caption ? "Photo: " + post.caption : "Admin shared photo";
+                    card.append(image);
+                }
+                if (post.caption) {
+                    const caption = document.createElement("p");
+                    caption.className = "post-caption";
+                    caption.textContent = post.caption;
+                    card.append(caption);
+                }
+                postGrid.append(card);
+            });
+        }
+
+        openPostDatabase().then(function (database) {
+            postDatabase = database;
+            return loadPosts();
+        }).then(function (posts) {
+            renderPosts(posts);
+            publishButton.disabled = false;
+        }).catch(function (error) {
+            postStatus.textContent = error.message;
+        });
+
+        openComplaintDatabase().then(function (database) {
+            complaintDatabase = database;
+            return loadDepartmentComplaints();
+        }).then(renderDepartmentComplaints).catch(function (error) {
+            complaintStatus.textContent = error.message;
+        });
+
+        postForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const caption = document.getElementById("post-caption").value.trim();
+            const photo = document.getElementById("post-photo").files[0] || null;
+            if (!caption && !photo) {
+                postStatus.textContent = "Write a caption or choose a photo before sharing.";
+                return;
+            }
+            if (photo && !photo.type.startsWith("image/")) {
+                postStatus.textContent = "Choose a valid image file.";
+                return;
+            }
+            if (photo && photo.size > photoLimit) {
+                postStatus.textContent = "Choose an image smaller than 5 MB.";
+                return;
+            }
+            if (!postDatabase) {
+                postStatus.textContent = "Post storage is not ready. Refresh the page and try again.";
+                return;
+            }
+            publishButton.disabled = true;
+            postStatus.textContent = "Sharing your post...";
+            const post = {
+                id: Date.now().toString(36) + "-" + Math.random().toString(36).slice(2),
+                author: currentUsername,
+                department: department,
+                caption: caption,
+                photo: photo,
+                likes: [],
+                comments: [],
+                createdAt: Date.now()
+            };
+            savePost(post).then(loadPosts).then(function (posts) {
+                renderPosts(posts);
+                postForm.reset();
+                postStatus.textContent = "Your post has been shared.";
+            }).catch(function (error) {
+                postStatus.textContent = "Could not share your post: " + error.message;
+            }).then(function () {
+                publishButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
